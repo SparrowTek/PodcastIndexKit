@@ -11,9 +11,5 @@ public struct SearchResult: Codable {
     public let count: Int
     public let query: String
     public let description: String
-    
-//    "count": 17,
-//      "query": "batman university",
-//      "description": "Found matching feeds."
 }
 
