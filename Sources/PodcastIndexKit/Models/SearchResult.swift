@@ -12,4 +12,3 @@ public struct SearchResult: Codable {
     public let query: String
     public let description: String
 }
-

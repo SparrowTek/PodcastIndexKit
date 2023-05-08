@@ -64,7 +64,6 @@ Hint: You must call the static setup(apiKey: String, apiSecret: String, userAgen
     }
 
     func client(_ client: APIClient, validateResponse response: HTTPURLResponse, data: Data, task: URLSessionTask) throws {
-        #warning("do a better job with what error gets sent based on status code")
         guard (200..<300).contains(response.statusCode) else { throw APIError.unacceptableStatusCode(response.statusCode) }
     }
 
