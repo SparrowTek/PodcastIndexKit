@@ -38,4 +38,34 @@ public struct Podcast: Codable {
     public let episodeCount: Int
     public let imageUrlHash: Double
     public let newestItemPubdate: Date
+    public let itunesType: String?
+    public let chash: String?
+    public let value: PodcastValue?
+    public let funding: PodcastFunding?
+}
+
+public struct PodcastValue: Codable {
+    public let model: PodcastValueModel
+    public let destinations: [PodcastValueDestination]
+}
+
+public struct PodcastValueModel: Codable {
+    public let type: String
+    public let method: String
+    public let suggested: String
+}
+
+public struct PodcastValueDestination: Codable {
+    public let name: String
+    public let type: String
+    public let address: String
+    public let split: Int
+    public let customKey: String?
+    public let customValue: String?
+    public let fee: Bool?
+}
+
+public struct PodcastFunding: Codable {
+    public let url: String
+    public let message: String
 }

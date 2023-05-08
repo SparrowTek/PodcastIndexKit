@@ -14,4 +14,5 @@ public final class PodcastIndexKit: ObservableObject {
     static var userAgent: String?
     
     public lazy var searchService = SearchService()
+    public lazy var podcastsService = PodcastsService()
 }
