@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/get",
+      "state" : {
+        "revision" : "12830cc64f31789ae6f4352d2d51d03a25fc3741",
+        "version" : "2.1.6"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto",
+      "state" : {
+        "revision" : "33a20e650c33f6d72d822d558333f2085effa3dc",
+        "version" : "2.5.0"
+      }
+    }
+  ],
+  "version" : 2
+}
