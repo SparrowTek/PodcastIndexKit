@@ -54,10 +54,10 @@ Hint: You must call the static setup(apiKey: String, apiSecret: String, userAgen
         let hashString = hashed.compactMap { String(format: "%02x", $0) }.joined()
         
         // set Headers
-        request.addValue( apiHeaderTime, forHTTPHeaderField: "X-Auth-Date")
-        request.addValue( apiKey, forHTTPHeaderField: "X-Auth-Key")
-        request.addValue( hashString, forHTTPHeaderField: "Authorization")
-        request.addValue( "userAgent", forHTTPHeaderField: "User-Agent")
+        request.addValue(apiHeaderTime, forHTTPHeaderField: "X-Auth-Date")
+        request.addValue(apiKey, forHTTPHeaderField: "X-Auth-Key")
+        request.addValue(hashString, forHTTPHeaderField: "Authorization")
+        request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
     }
 
     func client(_ client: APIClient, shouldRetry task: URLSessionTask, error: Error, attempts: Int) async throws -> Bool {
