@@ -38,11 +38,11 @@ var configuration: APIClient.Configuration = {
 class PodcastIndexAPIClientDelegate: APIClientDelegate {
     func client(_ client: APIClient, willSendRequest request: inout URLRequest) async throws {
         let errorMessage = """
-PODCASTINDEXKIT Error: your apiKey and secretKey were not set.
+PODCASTINDEXKIT Error: your apiKey, secretKey, and userAgent were not set.
 Please follow the intructions in the README for setting up the PodcastIndexKit framework
-Hint: You must call the static setup(apiKey: String, apiSecret: String) method before using the framework
+Hint: You must call the static setup(apiKey: String, apiSecret: String, userAgent: String) method before using the framework
 """
-        guard let apiKey = PodcastIndexKit.apiKey, let apiSecret = PodcastIndexKit.apiSecret else { fatalError(errorMessage) }
+        guard let apiKey = PodcastIndexKit.apiKey, let apiSecret = PodcastIndexKit.apiSecret, let userAgent = PodcastIndexKit.userAgent else { fatalError(errorMessage) }
         
         // prep for crypto
         let apiHeaderTime = String(Int(Date().timeIntervalSince1970))
@@ -57,10 +57,7 @@ Hint: You must call the static setup(apiKey: String, apiSecret: String) method b
         request.addValue( apiHeaderTime, forHTTPHeaderField: "X-Auth-Date")
         request.addValue( apiKey, forHTTPHeaderField: "X-Auth-Key")
         request.addValue( hashString, forHTTPHeaderField: "Authorization")
-        
-        #warning("must use a real app name")
-        request.addValue( "IndexTestApp/1.0", forHTTPHeaderField: "User-Agent")
-        
+        request.addValue( "userAgent", forHTTPHeaderField: "User-Agent")
     }
 
     func client(_ client: APIClient, shouldRetry task: URLSessionTask, error: Error, attempts: Int) async throws -> Bool {

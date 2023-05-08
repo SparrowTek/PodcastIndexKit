@@ -3,13 +3,15 @@ import Foundation
 public final class PodcastIndexKit: ObservableObject {
     public init() { }
     
-    static public func setup(apiKey: String, apiSecret: String) {
+    static public func setup(apiKey: String, apiSecret: String, userAgent: String) {
         self.apiKey = apiKey
         self.apiSecret = apiSecret
+        self.userAgent = userAgent
     }
     
-    static public var apiKey: String?
-    static public var apiSecret: String?
+    static var apiKey: String?
+    static var apiSecret: String?
+    static var userAgent: String?
     
     public lazy var searchService = SearchService()
 }
