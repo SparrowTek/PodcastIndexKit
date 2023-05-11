@@ -16,7 +16,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) The PodcastIndex Feed ID
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byFeedId id: Int, pretty: Bool? = nil) async throws -> PodcastsResult {
+    public func podcast(byFeedId id: Int, pretty: Bool? = nil) async throws -> PodcastResult {
         try await podcast(path: "byfeedid", q: ("id", "\(id)"))
     }
     
@@ -25,7 +25,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) PodcastIndex Feed URL
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byFeedUrl url: String, pretty: Bool? = nil) async throws -> PodcastsResult {
+    public func podcast(byFeedUrl url: String, pretty: Bool? = nil) async throws -> PodcastResult {
         try await podcast(path: "byfeedurl", q: ("url", url))
     }
     
@@ -38,7 +38,7 @@ public struct PodcastsService {
     /// [guid](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#guid) for details.
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byGuid guid: String, pretty: Bool? = nil) async throws -> PodcastsResult {
+    public func podcast(byGuid guid: String, pretty: Bool? = nil) async throws -> PodcastResult {
         try await podcast(path: "byguid", q: ("guid", guid))
     }
     
@@ -47,7 +47,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) The iTunes Feed ID to search for
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byItunesId id: Int, pretty: Bool? = nil) async throws -> PodcastsResult {
+    public func podcast(byItunesId id: Int, pretty: Bool? = nil) async throws -> PodcastResult {
         try await podcast(path: "byitunesid", q: ("id", "\(id)"))
     }
     
@@ -67,7 +67,7 @@ public struct PodcastsService {
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
-//    public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool? = nil) async throws -> SearchResult {
+//    public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool? = nil) async throws -> PodcastArrayResult {
 //        
 //    }
     
@@ -76,8 +76,8 @@ public struct PodcastsService {
     /// - parameter path: the path to append to the base path
     /// - parameter q: (Required) query to search for
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
-    /// - returns: a `PodcastsResult` object which is has an embedded `Podcast`.
-    private func podcast(path: String, q: (String, String?), pretty: Bool? = nil) async throws -> PodcastsResult {
+    /// - returns: a `PodcastResult` object which is has an embedded `Podcast`.
+    private func podcast(path: String, q: (String, String?), pretty: Bool? = nil) async throws -> PodcastResult {
         var query: [(String, String?)]? = [q]
         
         if let pretty, pretty == true {

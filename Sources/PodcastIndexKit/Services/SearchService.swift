@@ -21,7 +21,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> SearchResult {
+    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> PodcastArrayResult {
         try await search(path: "byterm", q: q, val: val, aponly: aponly, max: max, clean: clean, fulltext: fulltext, pretty: pretty)
     }
     
@@ -35,7 +35,7 @@ public struct SearchService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - parameter similar: If present, include similar matches in search response
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil, similar: Bool? = nil) async throws -> SearchResult {
+    public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil, similar: Bool? = nil) async throws -> PodcastArrayResult {
         try await search(path: "bytitle", q: q, val: val, max: max, clean: clean, fulltext: fulltext, pretty: pretty, similar: similar)
     }
     
@@ -55,7 +55,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byPerson q: String, max: Int? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> SearchResult {
+    public func search(byPerson q: String, max: Int? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> PodcastArrayResult {
         try await search(path: "byperson", q: q, max: max, fulltext: fulltext, pretty: pretty)
     }
     
@@ -68,7 +68,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> SearchResult {
+    public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil) async throws -> PodcastArrayResult {
         try await search(path: "music/byterm", q: q, val: val, aponly: aponly, max: max, clean: clean, fulltext: fulltext, pretty: pretty)
     }
     
@@ -83,7 +83,7 @@ public struct SearchService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - parameter similar: If present, include similar matches in search response
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    private func search(path: String, q: String, val: String? = nil, aponly: Bool? = nil, max: Int? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil, similar: Bool? = nil) async throws -> SearchResult {
+    private func search(path: String, q: String, val: String? = nil, aponly: Bool? = nil, max: Int? = nil, clean: Bool? = nil, fulltext: Bool? = nil, pretty: Bool? = nil, similar: Bool? = nil) async throws -> PodcastArrayResult {
         var query: [(String, String?)]? = [("q", q)]
         
         if let val {
