@@ -10,7 +10,7 @@ public struct EpisodeArrayResult: Codable {
     private let resultStatus: String
     
     /// List of live episodes for feed
-    public let liveItems: [Episode]
+    public let liveItems: [Episode]?
     
     /// List of episodes matching request
     public let items: [Episode]
