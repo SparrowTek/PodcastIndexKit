@@ -20,28 +20,13 @@ public struct EpisodesService {
     /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byFeedID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("id", id)]
+        append(max, toQuery: &query, withKey: "max")
+        append(since, toQuery: &query, withKey: "since")
+        append(enclosure, toQuery: &query, withKey: "enclosure")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let since {
-            query?.append(("since", "\(since)"))
-        }
-        
-        if let enclosure {
-            query?.append(("enclosure", enclosure))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value        
     }
     
     /// This call returns all the episodes we know about for this feed from the feed URL. Episodes are in reverse chronological order.
@@ -55,22 +40,10 @@ public struct EpisodesService {
     /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byFeedURL url: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("url", url)]
-        
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let since {
-            query?.append(("since", "\(since)"))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
+        append(max, toQuery: &query, withKey: "max")
+        append(since, toQuery: &query, withKey: "since")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)        
         
         return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: nil)).value
     }
@@ -89,22 +62,10 @@ public struct EpisodesService {
     /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byPodcastGUID guid: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("guid", guid)]
-        
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let since {
-            query?.append(("since", "\(since)"))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
+        append(max, toQuery: &query, withKey: "max")
+        append(since, toQuery: &query, withKey: "since")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/bypodcastguid", query: nil)).value
     }
@@ -123,26 +84,11 @@ public struct EpisodesService {
     /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byiTunesID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("id", id)]
-        
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let since {
-            query?.append(("since", "\(since)"))
-        }
-        
-        if let enclosure {
-            query?.append(("enclosure", enclosure))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
+        append(max, toQuery: &query, withKey: "max")
+        append(since, toQuery: &query, withKey: "since")
+        append(enclosure, toQuery: &query, withKey: "enclosure")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: nil)).value
     }
@@ -157,14 +103,8 @@ public struct EpisodesService {
     /// - returns: an `EpisodeResult` object containing an `Episode`.
     public func episodes(byID id: String, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
         var query: [(String, String?)]? = [("id", id)]
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/byid", query: nil)).value
     }
@@ -183,22 +123,10 @@ public struct EpisodesService {
     /// - returns: an `EpisodeResult` object containing an `Episode`.
     public func episodes(byGUID guid: String, feedid: String? = nil, feedurl: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
         var query: [(String, String?)]? = [("guid", guid)]
-        
-        if let feedid {
-            query?.append(("feedid", feedid))
-        }
-        
-        if let feedurl {
-            query?.append(("feedurl", feedurl))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
+        append(feedid, toQuery: &query, withKey: "feedid")
+        append(feedurl, toQuery: &query, withKey: "feedurl")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
     }
@@ -211,23 +139,9 @@ public struct EpisodesService {
     /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func liveEpisodes(max: Int? = nil, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]?
-        
-        if let max {
-            initQueryIfNeeded()
-            query?.append(("max", "\(max)"))
-        }
-        
-        if pretty {
-           initQueryIfNeeded()
-           query?.append(("pretty", nil)) 
-        }
-        
-        func initQueryIfNeeded() {
-            if query == nil { 
-                query = [] 
-            }
-        }
-        
+        append(max, toQuery: &query, withKey: "max")
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+                
         return try await apiClient.send(Request(path: "\(basePath)/live", query: query)).value
     }
     
@@ -257,42 +171,12 @@ public struct EpisodesService {
     /// - returns: a `RandomEpisodeResult` object containing an array of `Episode`s.
     public func randomEpisodes(max: Int? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]?
-        
-        if let max {
-            initQueryIfNeeded()
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let lang {
-            initQueryIfNeeded()
-            query?.append(("lang", lang))
-        }
-        
-        if let cat {
-            initQueryIfNeeded()
-            query?.append(("cat", cat))
-        }
-        
-        if let notcat {
-            initQueryIfNeeded()
-            query?.append(("notcat", notcat))
-        }
-        
-        if fulltext {
-            initQueryIfNeeded()
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            initQueryIfNeeded()
-            query?.append(("pretty", nil))
-        }
-        
-        func initQueryIfNeeded() {
-            if query == nil { 
-                query = [] 
-            }
-        }
+        append(max, toQuery: &query, withKey: "max")
+        append(lang, toQuery: &query, withKey: "lang")
+        append(cat, toQuery: &query, withKey: "cat")
+        append(notcat, toQuery: &query, withKey: "notcat")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
     }

@@ -11,7 +11,10 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byFeedId id: Int, pretty: Bool = false) async throws -> PodcastResult {
-        try await podcast(path: "byfeedid", q: ("id", "\(id)"), pretty: pretty)
+        var query: [(String, String?)]? = [("id", "\(id)")]
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
     }
     
     /// This call returns everything we know about the feed from the feed URL
@@ -20,7 +23,10 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byFeedUrl url: String, pretty: Bool = false) async throws -> PodcastResult {
-        try await podcast(path: "byfeedurl", q: ("url", url), pretty: pretty)
+        var query: [(String, String?)]? = [("url", url)]
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: query)).value
     }
     
     /// This call returns everything we know about the feed from the feed's GUID.
@@ -33,7 +39,10 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byGuid guid: String, pretty: Bool = false) async throws -> PodcastResult {
-        try await podcast(path: "byguid", q: ("guid", guid), pretty: pretty)
+        var query: [(String, String?)]? = [("guid", guid)]
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byguid", query: query)).value
     }
     
     /// This call returns everything we know about the feed from the iTunes ID
@@ -42,7 +51,10 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byItunesId id: Int, pretty: Bool = false) async throws -> PodcastResult {
-        try await podcast(path: "byitunesid", q: ("id", "\(id)"), pretty: pretty)
+        var query: [(String, String?)]? = [("id", "\(id)")]
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: query)).value
     }
     
     /// This call returns all feeds that support the specified
@@ -62,7 +74,12 @@ public struct PodcastsService {
     ///Parameter shall not have a value
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
     public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
-        try await podcasts(path: "bytag", q: ("podcast-value", nil), max: max, pretty: pretty, startAt: startAt)
+        var query: [(String, String?)]? = [("podcast-value", nil)]
+        append(max, toQuery: &query, withKey: "max")
+        append(startAt, toQuery: &query, withKey: "start_at")
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/bytag", query: query)).value
     }
     
     /// This call returns all feeds marked with the specified [medium](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#medium) tag value.
@@ -74,7 +91,11 @@ public struct PodcastsService {
     ///Parameter shall not have a value
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
     public func podcast(byMedium medium: String, max: Int? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
-        try await podcasts(path: "bymedium", q: ("medium", medium), max: max, pretty: pretty)
+        var query: [(String, String?)]? = [("medium", medium)]
+        append(max, toQuery: &query, withKey: "max")
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/bymedium", query: query)).value
     }
     
     /// This call returns the podcasts/feeds that in the index that are trending.
@@ -100,42 +121,12 @@ public struct PodcastsService {
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
     public func trendingPodcasts(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
         var query: [(String, String?)]?
-                
-        if let max {
-            initQueryIfNeeded()
-            query?.append(("max", "\(max)"))
-        }
-        
-        if pretty {
-            initQueryIfNeeded()
-            query?.append(("pretty", nil))
-        }
-        
-        if let since {
-            initQueryIfNeeded()
-            query?.append(("since", "\(since)"))
-        }
-        
-        if let lang {
-            initQueryIfNeeded()
-            query?.append(("lang", lang))
-        }
-        
-        if let cat {
-            initQueryIfNeeded()
-            query?.append(("cat", cat))
-        }
-        
-        if let notcat {
-            initQueryIfNeeded()
-            query?.append(("notcat", notcat))
-        }
-        
-        func initQueryIfNeeded() {
-            if query == nil { 
-                query = [] 
-            }
-        }
+        append(max, toQuery: &query, withKey: "max")
+        append(since, toQuery: &query, withKey: "since")
+        append(lang, toQuery: &query, withKey: "lang")
+        append(cat, toQuery: &query, withKey: "cat")
+        append(notcat, toQuery: &query, withKey: "notcat")
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/trending", query: query)).value
     }
@@ -147,49 +138,8 @@ public struct PodcastsService {
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
     public func deadPodcasts(pretty: Bool = false) async throws -> PodcastArrayResult {
         var query: [(String, String?)]?
-        
-        if pretty {
-            query = [("pretty", nil)]
-        }
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/dead", query: query)).value
-    }
-    
-    /// Helper method to facilitate all podcast methods that return a `PodcastResult`
-    /// - parameter path: the path to append to the base path
-    /// - parameter q: (Required) query to search for
-    /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
-    /// - returns: a `PodcastResult` object which is has an embedded `Podcast`.
-    private func podcast(path: String, q: (String, String?), pretty: Bool) async throws -> PodcastResult {
-        var query: [(String, String?)]? = [q]
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
-        
-        return try await apiClient.send(Request(path: "\(basePath)/\(path)", query: query)).value
-    }
-    
-    /// Helper method to facilitate all podcast methods that return a `PodcastArrayResult`
-    /// - parameter path: the path to append to the base path
-    /// - parameter q: (Required) query to search for
-    /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
-    /// - returns: a `PodcastArrayResult` object which is has an embedded `Podcast` array.
-    private func podcasts(path: String, q: (String, String?), max: Int? = nil, pretty: Bool, startAt: String? = nil) async throws -> PodcastArrayResult {
-        var query: [(String, String?)]? = [q]
-                
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
-        
-        if let startAt {
-            query?.append(("start_at", startAt))
-        }
-        
-        return try await apiClient.send(Request(path: "\(basePath)/\(path)", query: query)).value
     }
 }

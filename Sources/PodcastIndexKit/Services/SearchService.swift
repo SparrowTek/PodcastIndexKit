@@ -14,8 +14,16 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
-        try await search(path: "byterm", q: q, val: val, aponly: aponly, max: max, clean: clean, fulltext: fulltext, pretty: pretty)
+    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {        
+        var query: [(String, String?)]? = [("q", q)]
+        append(val, toQuery: &query, withKey: "val")
+        append(max, toQuery: &query, withKey: "max")
+        append(aponly, toQuery: &query, withKey: "aponly")
+        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+                
+        return try await apiClient.send(Request(path: "\(basePath)/byterm", query: query)).value
     }
     
     /// This call returns all of the feeds where the title of the feed matches the search term (ignores case).
@@ -29,7 +37,15 @@ public struct SearchService {
     /// - parameter similar: If present, include similar matches in search response
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false, similar: Bool = false) async throws -> PodcastArrayResult {
-        try await search(path: "bytitle", q: q, val: val, max: max, clean: clean, fulltext: fulltext, pretty: pretty, similar: similar)
+        var query: [(String, String?)]? = [("q", q)]
+        append(val, toQuery: &query, withKey: "val")
+        append(max, toQuery: &query, withKey: "max")
+        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        appendNil(toQuery: &query, withKey: "similar", forBool: similar)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/bytitle", query: query)).value
     }
     
     /// This call returns all of the episodes where the specified person is mentioned.
@@ -49,7 +65,12 @@ public struct SearchService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func search(byPerson q: String, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
-        try await search(path: "byperson", q: q, max: max, fulltext: fulltext, pretty: pretty)
+        var query: [(String, String?)]? = [("q", q)]
+        append(max, toQuery: &query, withKey: "max")
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byperson", query: query)).value
     }
     
     /// This call returns all of the feeds that match the search terms in the title, author or owner of the where the [medium](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#medium) is music.
@@ -62,51 +83,14 @@ public struct SearchService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
-        try await search(path: "music/byterm", q: q, val: val, aponly: aponly, max: max, clean: clean, fulltext: fulltext, pretty: pretty)
-    }
-    
-    /// Helper method to facilitate all search methods
-    /// - parameter path: the path to append to the base path
-    /// - parameter q: (Required) Terms to search for
-    /// - parameter val: Only returns feeds with a value block of the specified type. Use any to return feeds with any value block.
-    /// - parameter aponly: Only returns feeds with an `itunesId`.
-    /// - parameter max: Maximum number of results to return.
-    /// - parameter clean: If present, only non-explicit feeds will be returned. Meaning, feeds where the itunes:explicit flag is set to false. Parameter shall not have a value
-    /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
-    /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
-    /// - parameter similar: If present, include similar matches in search response
-    /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    private func search(path: String, q: String, val: String? = nil, aponly: Bool? = nil, max: Int? = nil, clean: Bool? = nil, fulltext: Bool, pretty: Bool, similar: Bool? = nil) async throws -> PodcastArrayResult {
         var query: [(String, String?)]? = [("q", q)]
+        append(val, toQuery: &query, withKey: "val")
+        append(max, toQuery: &query, withKey: "max")
+        append(aponly, toQuery: &query, withKey: "aponly")
+        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
+        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
+        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        if let val {
-            query?.append(("val", val))
-        }
-        
-        if let max {
-            query?.append(("max", "\(max)"))
-        }
-        
-        if let aponly {
-            query?.append(("aponly", "\(aponly)"))
-        }
-        
-        if let clean, clean == true {
-            query?.append(("clean", nil))
-        }
-        
-        if fulltext {
-            query?.append(("fulltext", nil))
-        }
-        
-        if pretty {
-            query?.append(("pretty", nil))
-        }
-        
-        if let similar, similar == true {
-            query?.append(("similar", nil))
-        }
-        
-        return try await apiClient.send(Request(path: "\(basePath)/\(path)", query: query)).value
+        return try await apiClient.send(Request(path: "\(basePath)/music/byterm", query: query)).value
     }
 }
