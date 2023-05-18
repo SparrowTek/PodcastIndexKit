@@ -1,10 +1,3 @@
-//
-//  Episode.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/16/23.
-//
-
 import Foundation
 
 /// /// All of the information about an Episode

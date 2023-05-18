@@ -1,10 +1,3 @@
-//
-//  Podcast.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/7/23.
-//
-
 import Foundation
 
 /// All of the information about a Podcast

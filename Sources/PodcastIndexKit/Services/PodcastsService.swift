@@ -1,10 +1,3 @@
-//
-//  PodcastsService.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/8/23.
-//
-
 import Foundation
 import Get
 
@@ -106,30 +99,42 @@ public struct PodcastsService {
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///- returns: a  `SearchResult` object which has an array of `Podcast`s
     public func trendingPodcasts(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
-        var query: [(String, String?)]? = []
+        var query: [(String, String?)]?
                 
         if let max {
+            initQueryIfNeeded()
             query?.append(("max", "\(max)"))
         }
         
         if pretty {
+            initQueryIfNeeded()
             query?.append(("pretty", nil))
         }
         
         if let since {
+            initQueryIfNeeded()
             query?.append(("since", "\(since)"))
         }
         
         if let lang {
+            initQueryIfNeeded()
             query?.append(("lang", lang))
         }
         
         if let cat {
+            initQueryIfNeeded()
             query?.append(("cat", cat))
         }
         
         if let notcat {
+            initQueryIfNeeded()
             query?.append(("notcat", notcat))
+        }
+        
+        func initQueryIfNeeded() {
+            if query == nil { 
+                query = [] 
+            }
         }
         
         return try await apiClient.send(Request(path: "\(basePath)/trending", query: query)).value

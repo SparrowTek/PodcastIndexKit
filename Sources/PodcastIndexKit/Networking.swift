@@ -1,10 +1,3 @@
-//
-//  Networking.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/7/23.
-//
-
 import Foundation
 import Get
 import Crypto

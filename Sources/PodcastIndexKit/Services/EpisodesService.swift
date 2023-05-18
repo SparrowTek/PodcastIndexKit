@@ -1,10 +1,3 @@
-//
-//  EpisodesService.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/11/23.
-//
-
 import Foundation
 import Get
 
@@ -24,7 +17,7 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
+    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byFeedID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("id", id)]
         
@@ -59,7 +52,7 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
+    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
     public func episodes(byFeedURL url: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
         var query: [(String, String?)]? = [("url", url)]
         
@@ -93,10 +86,28 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
-    
-    
-    
+    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
+    public func episodes(byPodcastGUID guid: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+        var query: [(String, String?)]? = [("guid", guid)]
+        
+        if let max {
+            query?.append(("max", "\(max)"))
+        }
+        
+        if let since {
+            query?.append(("since", "\(since)"))
+        }
+        
+        if fulltext {
+            query?.append(("fulltext", nil))
+        }
+        
+        if pretty {
+            query?.append(("pretty", nil))
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/bypodcastguid", query: nil)).value
+    }
     
     /// This call returns all the episodes we know about for this feed from the iTunes ID.
     /// Episodes are in reverse chronological order.
@@ -109,8 +120,32 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
-    
+    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
+    public func episodes(byiTunesID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+        var query: [(String, String?)]? = [("id", id)]
+        
+        if let max {
+            query?.append(("max", "\(max)"))
+        }
+        
+        if let since {
+            query?.append(("since", "\(since)"))
+        }
+        
+        if let enclosure {
+            query?.append(("enclosure", enclosure))
+        }
+        
+        if fulltext {
+            query?.append(("fulltext", nil))
+        }
+        
+        if pretty {
+            query?.append(("pretty", nil))
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: nil)).value
+    }
     
     /// Get all the metadata for a single episode by passing its id.
     ///
@@ -119,8 +154,20 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// Parameter shall not have a value
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
-    
+    /// - returns: an `EpisodeResult` object containing an `Episode`.
+    public func episodes(byID id: String, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
+        var query: [(String, String?)]? = [("id", id)]
+        
+        if fulltext {
+            query?.append(("fulltext", nil))
+        }
+        
+        if pretty {
+            query?.append(("pretty", nil))
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byid", query: nil)).value
+    }
     
     /// Get all the metadata for a single episode by passing its guid and the feed id or URL.
     /// The feedid or the feedurl is required.
@@ -133,17 +180,56 @@ public struct EpisodesService {
     ///Parameter shall not have a value
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
-    
-    
+    /// - returns: an `EpisodeResult` object containing an `Episode`.
+    public func episodes(byGUID guid: String, feedid: String? = nil, feedurl: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
+        var query: [(String, String?)]? = [("guid", guid)]
+        
+        if let feedid {
+            query?.append(("feedid", feedid))
+        }
+        
+        if let feedurl {
+            query?.append(("feedurl", feedurl))
+        }
+        
+        if fulltext {
+            query?.append(("fulltext", nil))
+        }
+        
+        if pretty {
+            query?.append(("pretty", nil))
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
+    }
     
     /// Get all episodes that have been found in the podcast:liveitem from the feeds.
     ///
     ///- parameter max: Maximum number of results to return.
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
-    
+    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
+    public func liveEpisodes(max: Int? = nil, pretty: Bool = false) async throws -> EpisodeArrayResult {
+        var query: [(String, String?)]?
+        
+        if let max {
+            initQueryIfNeeded()
+            query?.append(("max", "\(max)"))
+        }
+        
+        if pretty {
+           initQueryIfNeeded()
+           query?.append(("pretty", nil)) 
+        }
+        
+        func initQueryIfNeeded() {
+            if query == nil { 
+                query = [] 
+            }
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/live", query: query)).value
+    }
     
     /// This call returns a random batch of episodes, in no specific order.
     ///
@@ -168,5 +254,46 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// Parameter shall not have a value
-    /// - returns: a n`EpisodeArrayResult` object containing an array of `Episode`s.
+    /// - returns: a `RandomEpisodeResult` object containing an array of `Episode`s.
+    public func randomEpisodes(max: Int? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+        var query: [(String, String?)]?
+        
+        if let max {
+            initQueryIfNeeded()
+            query?.append(("max", "\(max)"))
+        }
+        
+        if let lang {
+            initQueryIfNeeded()
+            query?.append(("lang", lang))
+        }
+        
+        if let cat {
+            initQueryIfNeeded()
+            query?.append(("cat", cat))
+        }
+        
+        if let notcat {
+            initQueryIfNeeded()
+            query?.append(("notcat", notcat))
+        }
+        
+        if fulltext {
+            initQueryIfNeeded()
+            query?.append(("fulltext", nil))
+        }
+        
+        if pretty {
+            initQueryIfNeeded()
+            query?.append(("pretty", nil))
+        }
+        
+        func initQueryIfNeeded() {
+            if query == nil { 
+                query = [] 
+            }
+        }
+        
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
+    }
 }

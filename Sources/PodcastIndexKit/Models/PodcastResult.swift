@@ -1,19 +1,12 @@
-//
-//  PodcastResult.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/8/23.
-//
-
-/// Podcast Index API response for any endpoint that returns a single Podcast
+/// Podcast Index API response for any endpoint that returns a single `Podcast`
 public struct PodcastResult: Codable {
-    private let resultStatus: String
+    private let resultStatus: String?
     
     /// Known details of podcast feed
-    public let feed: Podcast
+    public let feed: Podcast?
     
     /// Object containing the input query data
-    public let query: PodcastResultsQuery
+    public let query: PodcastResultsQuery?
     
     /// Description of the response
     public let description: String
@@ -21,7 +14,7 @@ public struct PodcastResult: Codable {
     /// Indicates API request status
     /// Allowed: true┃false
     public var status: Bool {
-        switch resultStatus.lowercased() {
+        switch resultStatus?.lowercased() {
         case "true": return true
         case "false": return false
         default: return false

@@ -1,10 +1,3 @@
-//
-//  SearchService.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/7/23.
-//
-
 import Get
 
 public struct SearchService {

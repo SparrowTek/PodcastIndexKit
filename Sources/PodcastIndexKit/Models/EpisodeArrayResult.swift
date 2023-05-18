@@ -1,10 +1,3 @@
-//
-//  EpisodeArrayResult.swift
-//  
-//
-//  Created by Thomas Rademaker on 5/16/23.
-//
-
 /// Podcast Index API response for any endpoint that returns an array of `Episode`s
 public struct EpisodeArrayResult: Codable {
     private let resultStatus: String
