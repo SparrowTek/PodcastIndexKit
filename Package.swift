@@ -27,8 +27,5 @@ let package = Package(
                 "Get",
                 .product(name: "Crypto", package: "swift-crypto"),
             ]),
-        .testTarget(
-            name: "PodcastIndexKitTests",
-            dependencies: ["PodcastIndexKit"]),
     ]
 )
