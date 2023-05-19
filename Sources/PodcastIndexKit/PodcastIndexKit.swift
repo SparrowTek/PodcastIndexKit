@@ -21,6 +21,5 @@ public final class PodcastIndexKit: ObservableObject {
     public lazy var statsService = StatsService()
     public lazy var categoriesService = CategoriesService()
     public lazy var hubService = HubService()
-    public lazy var addService = AddService()
     public lazy var appleReplacementService = AppleReplacementService()
 }
