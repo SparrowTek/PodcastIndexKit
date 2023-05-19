@@ -110,8 +110,8 @@ public struct RecentService {
 	///- parameter max: Maximum number of soundbites to return.
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: TODO: enter return comment
-	public func recentSoundbites(max: Int? = nil, pretty: Bool = false) async throws -> PodcastArrayResult { // TODO: This is the wrong return type
+	///- returns: a `SoundbiteArrayResult` object which contains an array of `Soundbite`s
+	public func recentSoundbites(max: Int? = nil, pretty: Bool = false) async throws -> SoundbiteArrayResult {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)

@@ -279,14 +279,3 @@ public struct Transcript: Codable {
     }
     
 }
-
-public struct Soundbite: Codable {
-    /// The time where the soundbite begins in the item specified by the enclosureUrl
-    public let startTime: Date
-    
-    /// The length to play the item specified by the enclosureUrl
-    public let duration: Int
-    
-    /// Name of the soundbite
-    public let title: String
-}
