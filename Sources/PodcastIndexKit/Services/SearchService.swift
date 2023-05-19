@@ -14,7 +14,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {        
+    public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {        
         var query: [(String, String?)]? = [("q", q)]
         append(val, toQuery: &query, withKey: "val")
         append(max, toQuery: &query, withKey: "max")
@@ -36,7 +36,7 @@ public struct SearchService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - parameter similar: If present, include similar matches in search response
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false, similar: Bool = false) async throws -> PodcastArrayResult {
+    public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false, similar: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
         append(val, toQuery: &query, withKey: "val")
         append(max, toQuery: &query, withKey: "max")
@@ -64,7 +64,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func search(byPerson q: String, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
+    public func search(byPerson q: String, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
         append(max, toQuery: &query, withKey: "max")
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
@@ -82,7 +82,7 @@ public struct SearchService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words. Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
-    public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
+    public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
         append(val, toQuery: &query, withKey: "val")
         append(max, toQuery: &query, withKey: "max")

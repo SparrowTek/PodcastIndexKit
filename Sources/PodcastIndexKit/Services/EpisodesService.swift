@@ -17,8 +17,8 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-    public func episodes(byFeedID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+    public func episodes(byFeedID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]? = [("id", id)]
         append(max, toQuery: &query, withKey: "max")
         append(since, toQuery: &query, withKey: "since")
@@ -37,8 +37,8 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-    public func episodes(byFeedURL url: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+    public func episodes(byFeedURL url: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]? = [("url", url)]
         append(max, toQuery: &query, withKey: "max")
         append(since, toQuery: &query, withKey: "since")
@@ -59,8 +59,8 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-    public func episodes(byPodcastGUID guid: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+    public func episodes(byPodcastGUID guid: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]? = [("guid", guid)]
         append(max, toQuery: &query, withKey: "max")
         append(since, toQuery: &query, withKey: "since")
@@ -81,8 +81,8 @@ public struct EpisodesService {
     /// - parameter fulltext: If present, return the full text value of any text fields (ex: description). If not provided, field value is truncated to 100 words.
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
-    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-    public func episodes(byiTunesID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+    public func episodes(byiTunesID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]? = [("id", id)]
         append(max, toQuery: &query, withKey: "max")
         append(since, toQuery: &query, withKey: "since")
@@ -100,8 +100,8 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// Parameter shall not have a value
-    /// - returns: an `EpisodeResult` object containing an `Episode`.
-    public func episodes(byID id: String, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
+    /// - returns: an `EpisodeResponse` object containing an `Episode`.
+    public func episodes(byID id: String, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResponse {
         var query: [(String, String?)]? = [("id", id)]
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
@@ -120,8 +120,8 @@ public struct EpisodesService {
     ///Parameter shall not have a value
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    /// - returns: an `EpisodeResult` object containing an `Episode`.
-    public func episodes(byGUID guid: String, feedid: String? = nil, feedurl: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResult {
+    /// - returns: an `EpisodeResponse` object containing an `Episode`.
+    public func episodes(byGUID guid: String, feedid: String? = nil, feedurl: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResponse {
         var query: [(String, String?)]? = [("guid", guid)]
         append(feedid, toQuery: &query, withKey: "feedid")
         append(feedurl, toQuery: &query, withKey: "feedurl")
@@ -136,8 +136,8 @@ public struct EpisodesService {
     ///- parameter max: Maximum number of results to return.
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    /// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-    public func liveEpisodes(max: Int? = nil, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+    public func liveEpisodes(max: Int? = nil, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]?
         append(max, toQuery: &query, withKey: "max")
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
@@ -168,8 +168,8 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// Parameter shall not have a value
-    /// - returns: a `RandomEpisodeResult` object containing an array of `Episode`s.
-    public func randomEpisodes(max: Int? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+    /// - returns: a `RandomEpisodeResponse` object containing an array of `Episode`s.
+    public func randomEpisodes(max: Int? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
         var query: [(String, String?)]?
         append(max, toQuery: &query, withKey: "max")
         append(lang, toQuery: &query, withKey: "lang")

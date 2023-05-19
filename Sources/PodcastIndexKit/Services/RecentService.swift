@@ -16,8 +16,8 @@ public struct RecentService {
 	///- parameter shall not have a value
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	/// - returns: an `EpisodeArrayResult` object containing an array of `Episode`s.
-	public func recentEpisodes(max: Int? = nil, excludeString: String? = nil, before: Date? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResult {
+	/// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
+	public func recentEpisodes(max: Int? = nil, excludeString: String? = nil, before: Date? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		append(excludeString, toQuery: &query, withKey: "excludeString")
@@ -50,8 +50,8 @@ public struct RecentService {
 	/// Category numbers and names can be found in the [Podcast Namespace documentation](https://github.com/Podcastindex-org/podcast-namespace/blob/main/categories.json)
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-	public func recentFeeds(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
+	///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+	public func recentFeeds(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		append(since, toQuery: &query, withKey: "since")
@@ -74,8 +74,8 @@ public struct RecentService {
 	/// Parameter shall not have a value
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-	public func recentNewFeeds(max: Int? = nil, since: Date? = nil, feedid: String? = nil, desc: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResult {
+	///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+	public func recentNewFeeds(max: Int? = nil, since: Date? = nil, feedid: String? = nil, desc: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		append(since, toQuery: &query, withKey: "since")
@@ -94,8 +94,8 @@ public struct RecentService {
 	///- parameter since: Return items since the specified epoch timestamp.
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: a `DataResult` object
-	public func recentData(max: Int? = nil, since: Date? = nil, pretty: Bool = false) async throws -> DataResult {
+	///- returns: a `DataResponse` object
+	public func recentData(max: Int? = nil, since: Date? = nil, pretty: Bool = false) async throws -> DataResponse {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		append(since, toQuery: &query, withKey: "since")
@@ -110,8 +110,8 @@ public struct RecentService {
 	///- parameter max: Maximum number of soundbites to return.
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: a `SoundbiteArrayResult` object which contains an array of `Soundbite`s
-	public func recentSoundbites(max: Int? = nil, pretty: Bool = false) async throws -> SoundbiteArrayResult {
+	///- returns: a `SoundbiteArrayResponse` object which contains an array of `Soundbite`s
+	public func recentSoundbites(max: Int? = nil, pretty: Bool = false) async throws -> SoundbiteArrayResponse {
 		var query: [(String, String?)]?
 		append(max, toQuery: &query, withKey: "max")
 		appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)

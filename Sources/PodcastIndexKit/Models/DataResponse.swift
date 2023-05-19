@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DataResult: Codable {
+public struct DataResponse: Codable {
 	private let resultStatus: String?
 	
 	/// Number of items in the feeds returned in request

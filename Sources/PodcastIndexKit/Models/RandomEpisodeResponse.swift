@@ -1,4 +1,4 @@
-public struct RandomEpisodeResult: Codable {
+public struct RandomEpisodeResponse: Codable {
 	private let resultStatus: String
 	
 	/// List of episodes matching request

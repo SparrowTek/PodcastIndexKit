@@ -1,4 +1,4 @@
-public struct SoundbiteArrayResult: Codable {
+public struct SoundbiteArrayResponse: Codable {
 	private let resultStatus: String
 	
 	public let count: Int

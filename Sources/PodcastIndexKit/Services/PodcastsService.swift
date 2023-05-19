@@ -10,7 +10,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) The PodcastIndex Feed ID
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byFeedId id: Int, pretty: Bool = false) async throws -> PodcastResult {
+    public func podcast(byFeedId id: Int, pretty: Bool = false) async throws -> PodcastResponse {
         var query: [(String, String?)]? = [("id", "\(id)")]
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
@@ -22,7 +22,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) PodcastIndex Feed URL
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byFeedUrl url: String, pretty: Bool = false) async throws -> PodcastResult {
+    public func podcast(byFeedUrl url: String, pretty: Bool = false) async throws -> PodcastResponse {
         var query: [(String, String?)]? = [("url", url)]
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
@@ -38,7 +38,7 @@ public struct PodcastsService {
     /// [guid](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#guid) for details.
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byGuid guid: String, pretty: Bool = false) async throws -> PodcastResult {
+    public func podcast(byGuid guid: String, pretty: Bool = false) async throws -> PodcastResponse {
         var query: [(String, String?)]? = [("guid", guid)]
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
@@ -50,7 +50,7 @@ public struct PodcastsService {
     /// - parameter id: (Required) The iTunes Feed ID to search for
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
-    public func podcast(byItunesId id: Int, pretty: Bool = false) async throws -> PodcastResult {
+    public func podcast(byItunesId id: Int, pretty: Bool = false) async throws -> PodcastResponse {
         var query: [(String, String?)]? = [("id", "\(id)")]
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
@@ -72,8 +72,8 @@ public struct PodcastsService {
     ///- parameter start_at: Feed ID to start at for request
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    ///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-    public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
+    ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+    public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("podcast-value", nil)]
         append(max, toQuery: &query, withKey: "max")
         append(startAt, toQuery: &query, withKey: "start_at")
@@ -89,8 +89,8 @@ public struct PodcastsService {
     ///- parameter start_at: Feed ID to start at for request
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///Parameter shall not have a value
-    ///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-    public func podcast(byMedium medium: String, max: Int? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
+    ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+    public func podcast(byMedium medium: String, max: Int? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("medium", medium)]
         append(max, toQuery: &query, withKey: "max")
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
@@ -118,8 +118,8 @@ public struct PodcastsService {
     /// The cat and notcat filters can be used together to fine tune a very specific result set.
     /// Category numbers and names can be found in the [Podcast Namespace documentation](https://github.com/Podcastindex-org/podcast-namespace/blob/main/categories.json)
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
-    ///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-    public func trendingPodcasts(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResult {
+    ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+    public func trendingPodcasts(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]?
         append(max, toQuery: &query, withKey: "max")
         append(since, toQuery: &query, withKey: "since")
@@ -135,8 +135,8 @@ public struct PodcastsService {
     /// Dead feeds can also be accessed from object storage at [https://public.podcastindex.org/podcastindex_dead_feeds.csv](https://public.podcastindex.org/podcastindex_dead_feeds.csv)
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// Parameter shall not have a value
-    ///- returns: a  `PodcastArrayResult` object which has an array of `Podcast`s
-    public func deadPodcasts(pretty: Bool = false) async throws -> PodcastArrayResult {
+    ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
+    public func deadPodcasts(pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]?
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
