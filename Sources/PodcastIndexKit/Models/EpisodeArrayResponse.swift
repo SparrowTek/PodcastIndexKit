@@ -1,5 +1,5 @@
 /// Podcast Index API response for any endpoint that returns an array of `Episode`s
-public struct EpisodeArrayResponse: Codable {
+public struct EpisodeArrayResponse: Codable, Hashable, Sendable {
     private let responseStatus: String
     
     /// List of live episodes for feed
@@ -36,7 +36,7 @@ public struct EpisodeArrayResponse: Codable {
     }
 }
 
-public enum EpisodeResponsesQuery: Codable {
+public enum EpisodeResponsesQuery: Codable, Hashable, Sendable {
     /// Single ID: Single ID passed to request
     case single(String)
     

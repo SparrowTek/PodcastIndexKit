@@ -1,4 +1,4 @@
-public struct Destination: Codable {
+public struct Destination: Codable, Hashable, Sendable {
 	/// Name for the destination
 	public let name: String
 	
@@ -24,6 +24,6 @@ public struct Destination: Codable {
 	public let customValue: String
 }
 
-public enum DestinationType: String, Codable {
+public enum DestinationType: String, Codable, Hashable, Sendable {
 	case node
 }

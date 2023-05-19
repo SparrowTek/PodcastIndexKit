@@ -1,5 +1,5 @@
 /// Podcast Index API response for any endpoint that returns an array of Podcasts
-public struct PodcastArrayResponse: Codable {
+public struct PodcastArrayResponse: Codable, Hashable, Sendable {
     private let responseStatus: String
     
     /// List of feeds matching request

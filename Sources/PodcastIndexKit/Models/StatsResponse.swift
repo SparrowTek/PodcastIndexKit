@@ -1,4 +1,4 @@
-public struct StatsResponse: Codable {
+public struct StatsResponse: Codable, Hashable, Sendable {
 	private let responseStatus: String
 	
 	/// Indicates API request status

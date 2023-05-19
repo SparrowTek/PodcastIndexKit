@@ -1,4 +1,4 @@
-public struct StatProperties: Codable {
+public struct StatProperties: Codable, Hashable, Sendable {
 	/// Total podcast feeds in the index.
 	public let feedCountTotal: Int 
 	 

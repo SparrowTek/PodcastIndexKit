@@ -1,7 +1,7 @@
 import Foundation
 
 /// All of the information about a Podcast
-public struct Podcast: Codable {
+public struct Podcast: Codable, Hashable, Sendable {
     
     /// The internal PodcastIndex.org Feed ID.
     public let id: Int
@@ -133,28 +133,28 @@ public struct Podcast: Codable {
     public let funding: PodcastFunding?
 }
 
-public enum PodcastType: Int, Codable {
+public enum PodcastType: Int, Codable, Hashable, Sendable {
     case rss = 0
     case atom = 1
 }
 
-public enum PodcastLocked: Int, Codable {
+public enum PodcastLocked: Int, Codable, Hashable, Sendable {
     case no = 0
     case yes = 1
 }
 
-public struct PodcastValue: Codable {
+public struct PodcastValue: Codable, Hashable, Sendable {
     public let model: PodcastValueModel
     public let destinations: [PodcastValueDestination]
 }
 
-public struct PodcastValueModel: Codable {
+public struct PodcastValueModel: Codable, Hashable, Sendable {
     public let type: String
     public let method: String
     public let suggested: String
 }
 
-public struct PodcastValueDestination: Codable {
+public struct PodcastValueDestination: Codable, Hashable, Sendable {
     public let name: String
     public let type: String
     public let address: String
@@ -164,7 +164,7 @@ public struct PodcastValueDestination: Codable {
     public let fee: Bool?
 }
 
-public struct PodcastFunding: Codable {
+public struct PodcastFunding: Codable, Hashable, Sendable {
     public let url: String
     public let message: String
 }

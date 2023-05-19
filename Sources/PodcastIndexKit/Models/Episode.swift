@@ -1,7 +1,7 @@
 import Foundation
 
 /// /// All of the information about an Episode
-public struct Episode: Codable {
+public struct Episode: Codable, Hashable, Sendable {
     /// The internal PodcastIndex.org episode ID.
     public let id: Int
     
@@ -133,23 +133,23 @@ public struct Episode: Codable {
     public let status: LivestreamStatus?
 }
 
-public enum LivestreamStatus: String, Codable {
+public enum LivestreamStatus: String, Codable, Hashable, Sendable {
     case ended
     case live
 }
 
-public enum EpisodeExplicitStatus: Int, Codable {
+public enum EpisodeExplicitStatus: Int, Codable, Hashable, Sendable {
     case notExplicit = 0
     case explicit = 1
 }
 
-public enum EpisodeType: String, Codable {
+public enum EpisodeType: String, Codable, Hashable, Sendable {
     case full
     case trailer
     case bonus
 }
 
-public struct SocialInteractData: Codable {
+public struct SocialInteractData: Codable, Hashable, Sendable {
     /// The uri/url of the root post comment
     public let url: String
     
@@ -158,7 +158,7 @@ public struct SocialInteractData: Codable {
     /// Allowed: disabled┃activitypub┃twitter┃lightning
     public let `protocol`: SocialIteractProtocol
     
-    public enum SocialIteractProtocol: String, Codable {
+    public enum SocialIteractProtocol: String, Codable, Hashable, Sendable {
         case disabled
         case activitypub
         case twitter
@@ -175,7 +175,7 @@ public struct SocialInteractData: Codable {
     public let priority: Int
 }
 
-public struct Person: Codable {
+public struct Person: Codable, Hashable, Sendable {
     
     /// The internal PodcastIndex.org person ID.
     public let id: Int
@@ -203,7 +203,7 @@ public struct Person: Codable {
     public let img: String
 }
 
-public struct Transcript: Codable {
+public struct Transcript: Codable, Hashable, Sendable {
     
     /// URL of the podcast transcript.
     public let url: String
@@ -212,7 +212,7 @@ public struct Transcript: Codable {
     /// Allowed: application/json┃application/srt┃text/html┃text/plain┃text/srt┃text/vtt
     public let type: TranscriptType
     
-    public enum TranscriptType: String, Codable {
+    public enum TranscriptType: String, Codable, Hashable, Sendable {
         case jsonApplication = "application/json"
         case srtApplication = "application/srt"
         case htmlText = "text/html"

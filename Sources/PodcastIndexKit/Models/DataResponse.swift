@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DataResponse: Codable {
+public struct DataResponse: Codable, Hashable, Sendable {
 	private let responseStatus: String?
 	
 	/// Number of items in the feeds returned in request
@@ -46,7 +46,7 @@ public struct DataResponse: Codable {
 	}
 }
 
-public struct PodcastIndexData: Codable {
+public struct PodcastIndexData: Codable, Hashable, Sendable {
 	/// Position in data
 	public let position: Int
 	
@@ -57,7 +57,7 @@ public struct PodcastIndexData: Codable {
 	public let items: [EpisodeData]
 }
 
-public struct PodcastData: Codable {
+public struct PodcastData: Codable, Hashable, Sendable {
 	/// The internal PodcastIndex.org Feed ID.
 	public let feedId: Int
 	
@@ -81,7 +81,7 @@ public struct PodcastData: Codable {
 	public let feedItunesId: Int
 }
 
-public struct EpisodeData: Codable {
+public struct EpisodeData: Codable, Hashable, Sendable {
 	/// The internal PodcastIndex.org episode ID.
 	public let episodeId: Int
 	

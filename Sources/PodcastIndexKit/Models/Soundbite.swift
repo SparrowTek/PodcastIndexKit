@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Soundbite: Codable {
+public struct Soundbite: Codable, Hashable, Sendable {
 	/// The time where the soundbite begins in the item specified by the enclosureUrl
 	public let startTime: Date
 	

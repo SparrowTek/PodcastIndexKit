@@ -1,5 +1,5 @@
 /// Podcast Index API response for any endpoint that returns a single `Episode`
-public struct EpisodeResponse: Codable {
+public struct EpisodeResponse: Codable, Hashable, Sendable {
 	private let responseStatus: String?
 	
 	/// The internal PodcastIndex.org episode ID.

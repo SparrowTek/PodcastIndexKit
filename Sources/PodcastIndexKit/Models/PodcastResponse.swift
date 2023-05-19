@@ -1,5 +1,5 @@
 /// Podcast Index API response for any endpoint that returns a single `Podcast`
-public struct PodcastResponse: Codable {
+public struct PodcastResponse: Codable, Hashable, Sendable {
     private let responseStatus: String?
     
     /// Known details of podcast feed
@@ -29,7 +29,7 @@ public struct PodcastResponse: Codable {
     }
 }
 
-public struct PodcastResponsesQuery: Codable {
+public struct PodcastResponsesQuery: Codable, Hashable, Sendable {
     /// The Podcast Index feed ID for the feed specified by the guid field passed to the request
     public let id: String?
     
