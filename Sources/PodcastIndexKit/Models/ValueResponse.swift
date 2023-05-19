@@ -22,4 +22,11 @@ public struct ValueResponse: Codable {
 	
 	/// Description of the response
 	public let description: String	
+	
+	enum CodingKeys: String, CodingKey {
+		case responseStatus = "status"
+		case query
+		case value
+		case description
+	}
 }

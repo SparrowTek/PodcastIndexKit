@@ -1,9 +1,5 @@
-public struct SoundbiteArrayResponse: Codable {
+public struct StatsResponse: Codable {
 	private let responseStatus: String
-	
-	public let count: Int
-	public let description: String
-	public let items: [Soundbite]
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
@@ -15,10 +11,15 @@ public struct SoundbiteArrayResponse: Codable {
 		}
 	}
 	
+	/// An array statistic properties
+	public let stats: [StatProperties]
+	
+	/// Description of the response
+	public let description: String
+	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
-		case count
+		case stats
 		case description
-		case items
 	}
 }

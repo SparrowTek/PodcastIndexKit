@@ -27,5 +27,4 @@ public struct Soundbite: Codable {
 	
 	/// The internal PodcastIndex.org Feed ID.
 	public let feedId: Int?
-	
 }
