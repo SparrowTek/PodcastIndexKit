@@ -1,7 +1,7 @@
 import Foundation
 
 public struct DataResponse: Codable {
-	private let resultStatus: String?
+	private let responseStatus: String?
 	
 	/// Number of items in the feeds returned in request
 	public let feedCount: Int?
@@ -27,7 +27,7 @@ public struct DataResponse: Codable {
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch resultStatus?.lowercased() {
+		switch responseStatus?.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
@@ -35,7 +35,7 @@ public struct DataResponse: Codable {
 	}
 	
 	enum CodingKeys: String, CodingKey {
-		case resultStatus = "status"
+		case responseStatus = "status"
 		case feedCount
 		case itemCount
 		case max

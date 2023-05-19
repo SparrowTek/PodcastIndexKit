@@ -1,6 +1,6 @@
 /// Podcast Index API response for any endpoint that returns a single `Podcast`
 public struct PodcastResponse: Codable {
-    private let resultStatus: String?
+    private let responseStatus: String?
     
     /// Known details of podcast feed
     public let feed: Podcast?
@@ -14,7 +14,7 @@ public struct PodcastResponse: Codable {
     /// Indicates API request status
     /// Allowed: true┃false
     public var status: Bool {
-        switch resultStatus?.lowercased() {
+        switch responseStatus?.lowercased() {
         case "true": return true
         case "false": return false
         default: return false
@@ -22,7 +22,7 @@ public struct PodcastResponse: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case resultStatus = "status"
+        case responseStatus = "status"
         case feed
         case query
         case description

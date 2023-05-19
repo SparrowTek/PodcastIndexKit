@@ -1,5 +1,5 @@
 public struct RandomEpisodeResponse: Codable {
-	private let resultStatus: String
+	private let responseStatus: String
 	
 	/// List of episodes matching request
 	public let episodes: [Episode]
@@ -16,7 +16,7 @@ public struct RandomEpisodeResponse: Codable {
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch resultStatus.lowercased() {
+		switch responseStatus.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
@@ -24,7 +24,7 @@ public struct RandomEpisodeResponse: Codable {
 	}
 	
 	enum CodingKeys: String, CodingKey {
-		case resultStatus = "status"
+		case responseStatus = "status"
 		case episodes
 		case count
 		case max

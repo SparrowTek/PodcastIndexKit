@@ -112,7 +112,7 @@ public struct Episode: Codable {
     /// Examples:
     /// lightning value type: [https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=169991&pretty](https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=169991&pretty)
     /// webmonetization value type: [https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=779873&pretty](https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=779873&pretty)
-    public let value: EpisodeValue
+    public let value: Value
     
     /// Soundbite for episode
     public let soundbite: Soundbite
@@ -147,63 +147,6 @@ public enum EpisodeType: String, Codable {
     case full
     case trailer
     case bonus
-}
-
-public struct EpisodeValue: Codable {
-    /// Description of the method for providing "Value for Value" payments
-    public let model: EpisodeValueModel
-    
-    /// List of destinations where "Value for Value" payments should be sent.
-    /// ⮕ [ Destination for "Value for Value" payment. ]
-    public let destinations: [EpisodeDestination]
-}
-
-public struct EpisodeDestination: Codable {
-    /// Name for the destination
-    public let name: String
-    
-    /// Address of node to receive payment
-    public let address: String
-    
-    /// Type of destination
-    /// Allowed: node
-    public let `type`: EpisodeDestinationType
-    
-    public enum EpisodeDestinationType: String, Codable {
-        case node
-    }
-    
-    /// Share of payment the destination should receive
-    public let split: Int
-    
-    /// Indicates if destination is included due to a fee being charged
-    public let fee: Bool
-    
-    /// The name of a custom record key to send along with the payment.
-    /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#value) and [value specification](https://github.com/Podcastindex-org/podcast-namespace/blob/main/value/value.md) for more information.
-    public let customKey: String
-    
-    /// A custom value to pass along with the payment. This is considered the value that belongs to the customKey.
-    /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#value) and [value specification](https://github.com/Podcastindex-org/podcast-namespace/blob/main/value/value.md) for more information.
-    public let customValue: String
-}
-
-public struct EpisodeValueModel: Codable {
-    /// Payment type
-    /// Allowed: lightning┃hive┃webmonetization
-    public let type: EpisodeValueModelType
-    
-    public enum EpisodeValueModelType: String, Codable {
-        case lightning
-        case hive
-        case webmonetization
-    }
-    
-    /// Method for sending payment
-    public let method: String
-    
-    /// Suggested amount per second of playback to send. Unit is specific to the type.
-    public let suggested: String
 }
 
 public struct SocialInteractData: Codable {

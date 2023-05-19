@@ -1,6 +1,6 @@
 /// Podcast Index API response for any endpoint that returns a single `Episode`
 public struct EpisodeResponse: Codable {
-	private let resultStatus: String?
+	private let responseStatus: String?
 	
 	/// The internal PodcastIndex.org episode ID.
 	public let id: String?
@@ -22,7 +22,7 @@ public struct EpisodeResponse: Codable {
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch resultStatus?.lowercased() {
+		switch responseStatus?.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
@@ -30,7 +30,7 @@ public struct EpisodeResponse: Codable {
 	}
 	
 	enum CodingKeys: String, CodingKey {
-		case resultStatus = "status"
+		case responseStatus = "status"
 		case id
 		case url
 		case guid
