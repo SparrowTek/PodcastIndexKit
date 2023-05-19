@@ -19,4 +19,5 @@ public final class PodcastIndexKit: ObservableObject {
     public lazy var recentService = RecentService()
     public lazy var valueService = ValueService()
     public lazy var statsService = StatsService()
+    public lazy var categoriesService = CategoriesService()
 }
