@@ -27,6 +27,13 @@ var configuration: APIClient.Configuration = {
     return config
 }()
 
+var noAPIKeyConfiguration: APIClient.Configuration = {
+    var config = APIClient.Configuration(baseURL: URL(string: "https://api.podcastindex.org/api/1.0"), delegate: nil)
+    config.decoder = .podcastIndexDecoder
+    config.encoder = .podcastIndexEncoder
+    return config
+}()
+
 class PodcastIndexAPIClientDelegate: APIClientDelegate {
     func client(_ client: APIClient, willSendRequest request: inout URLRequest) async throws {
         let errorMessage = """
