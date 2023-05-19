@@ -1,14 +1,8 @@
-public struct SoundbiteArrayResponse: Codable, Hashable, Sendable {
+public struct PubNotifyResponse: Codable, Hashable, Sendable {
 	private let responseStatus: String
-	
-	/// Number of items returned in request
-	public let count: Int
 	
 	/// Description of the response
 	public let description: String
-	
-	/// List of soundbites matching request
-	public let items: [Soundbite]
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
@@ -22,8 +16,6 @@ public struct SoundbiteArrayResponse: Codable, Hashable, Sendable {
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
-		case count
 		case description
-		case items
 	}
 }

@@ -34,6 +34,15 @@ var noAPIKeyConfiguration: APIClient.Configuration = {
     return config
 }()
 
+var appleReplacementConfiguration: APIClient.Configuration = {
+    var config = APIClient.Configuration(baseURL: URL(string: "https://api.podcastindex.org/"), delegate: nil)
+    
+    // TODO: need to encode and decode dates in this format - "2023-05-19T09:13:38-0500"
+    config.decoder = .podcastIndexDecoder
+    config.encoder = .podcastIndexEncoder
+    return config
+}()
+
 class PodcastIndexAPIClientDelegate: APIClientDelegate {
     func client(_ client: APIClient, willSendRequest request: inout URLRequest) async throws {
         let errorMessage = """
