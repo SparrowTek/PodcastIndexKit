@@ -1,6 +1,8 @@
 # PodcastIndexKit
 
-PodcastIndexKit is a Swift Package to easily integrate with the Podcasting 2.0 API at [podcastindex.org](https://podcastindex.org)
+PodcastIndexKit is a Swift Package to easily integrate with the Podcasting 2.0 API at [podcastindex.org](https://podcastindex.org)  
+
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSparrowTek%2FPodcastIndexKit%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSparrowTek%2FPodcastIndexKit%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit)
 
 ## Usage
 
