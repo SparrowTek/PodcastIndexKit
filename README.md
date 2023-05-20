@@ -30,4 +30,5 @@ Click here to see all [documentation](https://sparrowtek.com/PodcastIndexKit/doc
 ## Note
 
 This package requires a [PodcastIndex API key](https://api.podcastindex.org).  
-This package currently only supports API read endpoints. API write endpoints are not supported.
+This package currently only supports API read endpoints. API write endpoints are not supported.  
+Not all endpoints have been tested yet. If you find any bugs please open a PR.  
