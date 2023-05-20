@@ -25,7 +25,7 @@ Swift 5.8 is required in order to run the plugin.
 
 ## Documentation
 
-Click here to see all [documentation](https://sparrowtek.com/podcastindexKit/documentation/podcastindexkit/).
+Click here to see all [documentation](https://sparrowtek.com/PodcastIndexKit/documentation/podcastindexkit/).
 
 ## Note
 
