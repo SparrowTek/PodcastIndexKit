@@ -9,7 +9,7 @@ public struct PodcastResponse: Codable, Hashable, Sendable {
     public let query: PodcastResponsesQuery?
     
     /// Description of the response
-    public let description: String
+    public let description: String?
     
     /// Indicates API request status
     /// Allowed: true┃false

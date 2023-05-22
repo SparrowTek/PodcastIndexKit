@@ -2,13 +2,13 @@ import Foundation
 
 public struct Soundbite: Codable, Hashable, Sendable {
 	/// The time where the soundbite begins in the item specified by the enclosureUrl
-	public let startTime: Date
+	public let startTime: Date?
 	
 	/// The length to play the item specified by the enclosureUrl
-	public let duration: Int
+	public let duration: Int?
 	
 	/// Name of the soundbite
-	public let title: String
+	public let title: String?
 	
 	/// URL/link to the episode file
 	public let enclosureUrl: String?

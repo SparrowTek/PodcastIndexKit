@@ -1,10 +1,10 @@
 public struct Value: Codable, Hashable, Sendable {
 	/// Description of the method for providing "Value for Value" payments
-	public let model: ValueModel
+	public let model: ValueModel?
 	
 	/// List of destinations where "Value for Value" payments should be sent.
 	/// ⮕ [ Destination for "Value for Value" payment. ]
-	public let destinations: [Destination]
+	public let destinations: [Destination]?
 }
 
 public enum ValueModelType: String, Codable, Hashable, Sendable {
@@ -16,13 +16,13 @@ public enum ValueModelType: String, Codable, Hashable, Sendable {
 public struct ValueModel: Codable, Hashable, Sendable {
 	/// Payment type
 	/// Allowed: lightning┃hive┃webmonetization
-	public let type: ValueModelType
+	public let type: ValueModelType?
 	
 	/// Method for sending payment
-	public let method: String
+	public let method: String?
 	
 	/// Suggested amount per second of playback to send. Unit is specific to the type.
-	public let suggested: String
+	public let suggested: String?
 }
 
 public struct ValueQuery: Codable, Hashable, Sendable {

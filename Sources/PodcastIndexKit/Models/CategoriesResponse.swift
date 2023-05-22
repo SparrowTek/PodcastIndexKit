@@ -12,13 +12,13 @@ public struct CategoriesResponse: Codable, Hashable, Sendable {
 	}
 	
 	/// List of categories
-	public let feeds: [Category]
+	public let feeds: [Category]?
 	
 	/// Number of items returned in request
-	public let count: Int
+	public let count: Int?
 	
 	/// Description of the response
-	public let description: String
+	public let description: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
