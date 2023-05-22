@@ -26,7 +26,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value        
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
     }
     
     /// This call returns all the episodes we know about for this feed from the feed URL. Episodes are in reverse chronological order.
@@ -45,7 +45,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)        
         
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: query)).value
     }
     
     /// This call returns all the episodes we know about for this feed from the ]Podcast GUID](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#guid).
@@ -67,7 +67,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/bypodcastguid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/bypodcastguid", query: query)).value
     }
     
     /// This call returns all the episodes we know about for this feed from the iTunes ID.
@@ -90,7 +90,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: query)).value
     }
     
     /// Get all the metadata for a single episode by passing its id.
@@ -106,7 +106,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/byid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byid", query: query)).value
     }
     
     /// Get all the metadata for a single episode by passing its guid and the feed id or URL.
@@ -128,7 +128,7 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
     }
     
     /// Get all episodes that have been found in the podcast:liveitem from the feeds.
@@ -178,6 +178,6 @@ public struct EpisodesService {
         appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
         appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
         
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: nil)).value
+        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
     }
 }

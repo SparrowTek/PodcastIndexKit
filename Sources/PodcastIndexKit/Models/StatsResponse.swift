@@ -1,10 +1,10 @@
 public struct StatsResponse: Codable, Hashable, Sendable {
-	private let responseStatus: String
+	private let responseStatus: String?
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch responseStatus.lowercased() {
+		switch responseStatus?.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
@@ -12,10 +12,10 @@ public struct StatsResponse: Codable, Hashable, Sendable {
 	}
 	
 	/// An array statistic properties
-	public let stats: [StatProperties]
+	public let stats: [StatProperties]?
 	
 	/// Description of the response
-	public let description: String
+	public let description: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"

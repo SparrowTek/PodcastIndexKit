@@ -1,25 +1,25 @@
 /// Podcast Index API response for any endpoint that returns an array of `Episode`s
 public struct EpisodeArrayResponse: Codable, Hashable, Sendable {
-    private let responseStatus: String
+    private let responseStatus: String?
     
     /// List of live episodes for feed
     public let liveItems: [Episode]?
     
     /// List of episodes matching request
-    public let items: [Episode]
+    public let items: [Episode]?
     
     /// Number of items returned in request
-    public let count: Int
+    public let count: Int?
     
-    public let query: EpisodeResponsesQuery
+    public let query: EpisodeResponsesQuery?
         
     /// Description of the response
-    public let description: String
+    public let description: String?
     
     /// Indicates API request status
     /// Allowed: true┃false
     public var status: Bool {
-        switch responseStatus.lowercased() {
+        switch responseStatus?.lowercased() {
         case "true": return true
         case "false": return false
         default: return false

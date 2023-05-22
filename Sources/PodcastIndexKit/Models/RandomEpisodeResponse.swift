@@ -1,22 +1,22 @@
 public struct RandomEpisodeResponse: Codable, Hashable, Sendable {
-	private let responseStatus: String
+	private let responseStatus: String?
 	
 	/// List of episodes matching request
-	public let episodes: [Episode]
+	public let episodes: [Episode]?
 	
 	/// Number of items returned in request
-	public let count: Int
+	public let count: Int?
 	
 	/// Value of max parameter passed to request.
-	public let max: Int	
+	public let max: Int?
 		
 	/// Description of the response
-	public let description: String
+	public let description: String?
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch responseStatus.lowercased() {
+		switch responseStatus?.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
