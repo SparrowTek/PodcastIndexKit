@@ -25,6 +25,14 @@ let package = Package(
 
 Swift 5.8 is required in order to run the plugin.
 
+### Setup
+
+Before making any API requests you must setup the `PodcastIndexKit` package using the `setup` method.  
+
+```swift
+PodcastIndexKit.setup(apiKey: "YOUR_API_KEY", apiSecret: "YOUR_API_SECRET", userAgent: "YOUR_APP_USER_AGENT")
+```
+
 ## Documentation
 
 Click here to see all [documentation](https://sparrowtek.com/PodcastIndexKit/documentation/podcastindexkit/).
