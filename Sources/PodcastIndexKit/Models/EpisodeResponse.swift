@@ -1,28 +1,28 @@
 /// Podcast Index API response for any endpoint that returns a single `Episode`
 public struct EpisodeResponse: Codable, Hashable, Sendable {
-	private let responseStatus: String?
+	private let responseStatus: String
 	
 	/// The internal PodcastIndex.org episode ID.
-	public let id: String?
+	public let id: String
 	
 	/// Value passed to request in the feedurl parameter. If no feedurl passed, value will be null.
-	public let url: String?
+	public let url: String
 	
 	/// Value passed to request in the guid parameter.
-	public let guid: String?
+	public let guid: String
 	
-	public let podcastGuid: String?
+	public let podcastGuid: String
 	
 	/// Episode data
-	public let episode: Episode?
+	public let episode: Episode
 	
 	/// Description of the response
-	public let description: String?
+	public let description: String
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch responseStatus?.lowercased() {
+		switch responseStatus.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false

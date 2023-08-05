@@ -1,10 +1,10 @@
 public struct CategoriesResponse: Codable, Hashable, Sendable {
-	private let responseStatus: String?
+	private let responseStatus: String
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch responseStatus?.lowercased() {
+		switch responseStatus.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
@@ -12,13 +12,13 @@ public struct CategoriesResponse: Codable, Hashable, Sendable {
 	}
 	
 	/// List of categories
-	public let feeds: [Category]?
+	public let feeds: [Category]
 	
 	/// Number of items returned in request
-	public let count: Int?
+	public let count: Int
 	
 	/// Description of the response
-	public let description: String?
+	public let description: String
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"

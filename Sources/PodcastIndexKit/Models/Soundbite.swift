@@ -2,29 +2,29 @@ import Foundation
 
 public struct Soundbite: Codable, Hashable, Sendable {
 	/// The time where the soundbite begins in the item specified by the enclosureUrl
-	public let startTime: Date?
+	public let startTime: Date
 	
 	/// The length to play the item specified by the enclosureUrl
-	public let duration: Int?
+	public let duration: Int
 	
 	/// Name of the soundbite
-	public let title: String?
+	public let title: String
 	
 	/// URL/link to the episode file
-	public let enclosureUrl: String?
+	public let enclosureUrl: String
 	
 	/// The internal PodcastIndex.org episode ID.	
-	public let episodeId: Int?
+	public let episodeId: Int
 	
 	/// Name of the episode
-	public let episodeTitle: String?
+	public let episodeTitle: String
 	
 	/// Name of the feed
-	public let feedTitle: String?
+	public let feedTitle: String
 	
 	/// Current feed URL
-	public let feedUrl: String?
+	public let feedUrl: String
 	
 	/// The internal PodcastIndex.org Feed ID.
-	public let feedId: Int?
+	public let feedId: Int
 }

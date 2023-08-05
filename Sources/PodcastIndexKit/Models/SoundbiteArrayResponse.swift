@@ -1,19 +1,19 @@
 public struct SoundbiteArrayResponse: Codable, Hashable, Sendable {
-	private let responseStatus: String?
+	private let responseStatus: String
 	
 	/// Number of items returned in request
-	public let count: Int?
+	public let count: Int
 	
 	/// Description of the response
-	public let description: String?
+	public let description: String
 	
 	/// List of soundbites matching request
-	public let items: [Soundbite]?
+	public let items: [Soundbite]
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
 	public var status: Bool {
-		switch responseStatus?.lowercased() {
+		switch responseStatus.lowercased() {
 		case "true": return true
 		case "false": return false
 		default: return false
