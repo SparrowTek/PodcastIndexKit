@@ -1,15 +1,15 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.9
 
 import PackageDescription
 
 let package = Package(
     name: "PodcastIndexKit",
     platforms: [
-        .iOS(.v13),
-        .macCatalyst(.v13),
+        .iOS(.v17),
+        .macCatalyst(.v17),
         .macOS(.v10_15),
-        .watchOS(.v6),
-        .tvOS(.v13),
+        .watchOS(.v9),
+        .tvOS(.v16),
     ],
     products: [
         .library(

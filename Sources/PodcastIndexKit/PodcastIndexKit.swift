@@ -1,6 +1,8 @@
 import Foundation
+import SwiftData
 
-public final class PodcastIndexKit: ObservableObject {
+@Observable
+public final class PodcastIndexKit {
     public init() { }
     
     static public func setup(apiKey: String, apiSecret: String, userAgent: String) {
@@ -13,13 +15,13 @@ public final class PodcastIndexKit: ObservableObject {
     static var apiSecret: String?
     static var userAgent: String?
     
-    public lazy var searchService = SearchService()
-    public lazy var podcastsService = PodcastsService()
-    public lazy var episodesService = EpisodesService()
-    public lazy var recentService = RecentService()
-    public lazy var valueService = ValueService()
-    public lazy var statsService = StatsService()
-    public lazy var categoriesService = CategoriesService()
-    public lazy var hubService = HubService()
-    public lazy var appleReplacementService = AppleReplacementService()
+    public var searchService = SearchService()
+    public var podcastsService = PodcastsService()
+    public var episodesService = EpisodesService()
+    public var recentService = RecentService()
+    public var valueService = ValueService()
+    public var statsService = StatsService()
+    public var categoriesService = CategoriesService()
+    public var hubService = HubService()
+    public var appleReplacementService = AppleReplacementService()
 }
