@@ -6,8 +6,8 @@ let package = Package(
     name: "PodcastIndexKit",
     platforms: [
         .iOS(.v17),
+        .macOS(.v14),
         .macCatalyst(.v17),
-        .macOS(.v10_15),
         .watchOS(.v9),
         .tvOS(.v16),
     ],
