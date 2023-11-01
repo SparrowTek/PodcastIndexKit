@@ -1,8 +1,7 @@
-import Get
+import Foundation
 
 public struct SearchService {
-    private let apiClient = APIClient(configuration: configuration)
-    private let basePath = "/search"
+    private let router = NetworkRouter<SearchAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns all of the feeds that match the search terms in the title, author or owner of the feed.
     /// This is ordered by the last-released episode, with the latest at the top of the results.
@@ -16,12 +15,12 @@ public struct SearchService {
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func search(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {        
         var query: [(String, String?)]? = [("q", q)]
-        append(val, toQuery: &query, withKey: "val")
-        append(max, toQuery: &query, withKey: "max")
-        append(aponly, toQuery: &query, withKey: "aponly")
-        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        append(val, toParameters: &parameters, withKey: "val")
+        append(max, toParameters: &parameters, withKey: "max")
+        append(aponly, toParameters: &parameters, withKey: "aponly")
+        appendNil(toParameters: &parameters, withKey: "clean", forBool: clean)
+        appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+        appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
                 
         return try await apiClient.send(Request(path: "\(basePath)/byterm", query: query)).value
     }
@@ -38,12 +37,12 @@ public struct SearchService {
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func search(byTitle q: String, val: String? = nil, max: Int? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false, similar: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
-        append(val, toQuery: &query, withKey: "val")
-        append(max, toQuery: &query, withKey: "max")
-        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        appendNil(toQuery: &query, withKey: "similar", forBool: similar)
+        append(val, toParameters: &parameters, withKey: "val")
+        append(max, toParameters: &parameters, withKey: "max")
+        appendNil(toParameters: &parameters, withKey: "clean", forBool: clean)
+        appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+        appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+        appendNil(toParameters: &parameters, withKey: "similar", forBool: similar)
         
         return try await apiClient.send(Request(path: "\(basePath)/bytitle", query: query)).value
     }
@@ -66,9 +65,9 @@ public struct SearchService {
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func search(byPerson q: String, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
-        append(max, toQuery: &query, withKey: "max")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        append(max, toParameters: &parameters, withKey: "max")
+        appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+        appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/byperson", query: query)).value
     }
@@ -84,13 +83,53 @@ public struct SearchService {
     /// - returns: a `SearchResults` object which is an array of `Podcast`s.
     public func searchMusic(byTerm q: String, val: String? = nil, max: Int? = nil, aponly: Bool? = nil, clean: Bool = false, fulltext: Bool = false, pretty: Bool = false) async throws -> PodcastArrayResponse {
         var query: [(String, String?)]? = [("q", q)]
-        append(val, toQuery: &query, withKey: "val")
-        append(max, toQuery: &query, withKey: "max")
-        append(aponly, toQuery: &query, withKey: "aponly")
-        appendNil(toQuery: &query, withKey: "clean", forBool: clean)
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
+        append(val, toParameters: &parameters, withKey: "val")
+        append(max, toParameters: &parameters, withKey: "max")
+        append(aponly, toParameters: &parameters, withKey: "aponly")
+        appendNil(toParameters: &parameters, withKey: "clean", forBool: clean)
+        appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+        appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
         
         return try await apiClient.send(Request(path: "\(basePath)/music/byterm", query: query)).value
     }
 }
+
+enum SearchAPI {
+    case byTerm(q: String, val: String?, max: Int?, aponly: Bool?, clean: Bool, fulltext: Bool, pretty: Bool)
+}
+
+extension SearchAPI: EndpointType {
+    public var baseURL: URL {
+        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
+        return url
+    }
+    
+    var path: String {
+        switch self {
+        case .pubNotify: "/search"
+        }
+    }
+    
+    var httpMethod: HTTPMethod {
+        switch self {
+        case .pubNotify: .get
+        }
+    }
+    
+    var task: HTTPTask {
+        switch self {
+        case .pubNotify(let id, let url, let pretty):
+            var parameters: Parameters = [:]
+            append(id, toParameters: &parameters, withKey: "id")
+            append(url, toParameters: &parameters, withKey: "url")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        }
+    }
+    
+    var headers: HTTPHeaders? {
+        nil
+    }
+}
+

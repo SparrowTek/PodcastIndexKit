@@ -1,9 +1,7 @@
 import Foundation
-import Get
 
 public struct PodcastsService {
-    private let apiClient = APIClient(configuration: configuration)
-    private let basePath = "/podcasts"
+    private let router = NetworkRouter<PodcastsAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns everything we know about the feed from the PodcastIndex Feed ID
     ///
@@ -11,10 +9,7 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byFeedId id: Int, pretty: Bool = false) async throws -> PodcastResponse {
-        var query: [(String, String?)]? = [("id", "\(id)")]
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
+        try await router.execute(.byFeedID(id: id, pretty: pretty))
     }
     
     /// This call returns everything we know about the feed from the feed URL
@@ -23,10 +18,7 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byFeedUrl url: String, pretty: Bool = false) async throws -> PodcastResponse {
-        var query: [(String, String?)]? = [("url", url)]
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: query)).value
+        try await router.execute(.byFeedURL(url: url, pretty: pretty))
     }
     
     /// This call returns everything we know about the feed from the feed's GUID.
@@ -39,10 +31,7 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byGuid guid: String, pretty: Bool = false) async throws -> PodcastResponse {
-        var query: [(String, String?)]? = [("guid", guid)]
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byguid", query: query)).value
+        try await router.execute(.byGUID(guid: guid, pretty: pretty))
     }
     
     /// This call returns everything we know about the feed from the iTunes ID
@@ -51,10 +40,7 @@ public struct PodcastsService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging. Parameter shall not have a value
     /// - returns: a `Podcast` object containing information about the feed.
     public func podcast(byItunesId id: Int, pretty: Bool = false) async throws -> PodcastResponse {
-        var query: [(String, String?)]? = [("id", "\(id)")]
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: query)).value
+        try await router.execute(.byItunesID(id: id, pretty: pretty))
     }
     
     /// This call returns all feeds that support the specified
@@ -74,12 +60,7 @@ public struct PodcastsService {
     ///Parameter shall not have a value
     ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
     public func podcastByTag(max: Int? = nil, startAt: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
-        var query: [(String, String?)]? = [("podcast-value", nil)]
-        append(max, toQuery: &query, withKey: "max")
-        append(startAt, toQuery: &query, withKey: "start_at")
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/bytag", query: query)).value
+        try await router.execute(.byTag(max: max, startAt: startAt, pretty: pretty))
     }
     
     /// This call returns all feeds marked with the specified [medium](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#medium) tag value.
@@ -91,11 +72,7 @@ public struct PodcastsService {
     ///Parameter shall not have a value
     ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
     public func podcast(byMedium medium: String, max: Int? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
-        var query: [(String, String?)]? = [("medium", medium)]
-        append(max, toQuery: &query, withKey: "max")
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/bymedium", query: query)).value
+        try await router.execute(.byMedium(medium: medium, max: max, pretty: pretty))
     }
     
     /// This call returns the podcasts/feeds that in the index that are trending.
@@ -120,15 +97,7 @@ public struct PodcastsService {
     ///- parameter pretty: If present, makes the output “pretty” to help with debugging.
     ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
     public func trendingPodcasts(max: Int? = nil, since: Date? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, pretty: Bool = false) async throws -> PodcastArrayResponse {
-        var query: [(String, String?)]?
-        append(max, toQuery: &query, withKey: "max")
-        append(since, toQuery: &query, withKey: "since")
-        append(lang, toQuery: &query, withKey: "lang")
-        append(cat, toQuery: &query, withKey: "cat")
-        append(notcat, toQuery: &query, withKey: "notcat")
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/trending", query: query)).value
+        try await router.execute(.trending(max: max, since: since, lang: lang, cat: cat, notcat: notcat, pretty: pretty))
     }
     
     /// This call returns all feeds that have been marked dead (dead == 1)
@@ -137,9 +106,101 @@ public struct PodcastsService {
     /// Parameter shall not have a value
     ///- returns: a  `PodcastArrayResponse` object which has an array of `Podcast`s
     public func deadPodcasts(pretty: Bool = false) async throws -> PodcastArrayResponse {
-        var query: [(String, String?)]?
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/dead", query: query)).value
+        try await router.execute(.dead(pretty: pretty))
     }
 }
+
+enum PodcastsAPI {
+    case byFeedID(id: Int, pretty: Bool)
+    case byFeedURL(url: String, pretty: Bool)
+    case byGUID(guid: String, pretty: Bool)
+    case byItunesID(id: Int, pretty: Bool)
+    case byTag(max: Int?, startAt: String?, pretty: Bool)
+    case byMedium(medium: String, max: Int?, pretty: Bool)
+    case trending(max: Int?, since: Date?, lang: String?, cat: String?, notcat: String?, pretty: Bool)
+    case dead(pretty: Bool)
+}
+
+extension PodcastsAPI: EndpointType {
+    public var baseURL: URL {
+        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
+        return url
+    }
+    
+    var path: String {
+        switch self {
+        case .byFeedID: "/podcasts/byfeedid"
+        case .byFeedURL: "/podcasts/byfeedurl"
+        case .byGUID: "/podcasts/byguid"
+        case .byItunesID: "/podcasts/byitunesid"
+        case .byTag: "/podcasts/bytag"
+        case .byMedium: "/podcasts/bymedium"
+        case .trending: "/podcasts/trending"
+        case .dead: "/podcasts/dead"
+        }
+    }
+    
+    var httpMethod: HTTPMethod {
+        switch self {
+        case .byFeedID, .byFeedURL, .byGUID, .byItunesID, .byTag, .byMedium, .trending, .dead: .get
+        }
+    }
+    
+    var task: HTTPTask {
+        switch self {
+        case .byFeedID(let id, let pretty):
+            var parameters: Parameters = ["id" : id]
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byFeedURL(let url, let pretty):
+            var parameters: Parameters = ["url" : url]
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byGUID(let guid, let pretty):
+            var parameters: Parameters = ["guid" : guid]
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byItunesID(let id, let pretty):
+            var parameters: Parameters = ["id" : id]
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byTag(let max, let startAt, let pretty):
+            var parameters: Parameters = ["podcast-value" : nil]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(startAt, toParameters: &parameters, withKey: "start_at")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byMedium(let medium, let max, let pretty):
+            var parameters: Parameters = ["medium" : medium]
+            append(max, toParameters: &parameters, withKey: "max")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .trending(let max, let since, let lang, let cat, let notcat, let pretty):
+            var parameters: Parameters = [:]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(since, toParameters: &parameters, withKey: "since")
+            append(lang, toParameters: &parameters, withKey: "lang")
+            append(cat, toParameters: &parameters, withKey: "cat")
+            append(notcat, toParameters: &parameters, withKey: "notcat")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .dead(let pretty):
+            var parameters: Parameters = [:]
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        }
+    }
+    
+    var headers: HTTPHeaders? {
+        nil
+    }
+}
+

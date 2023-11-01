@@ -40,17 +40,14 @@ extension AppleReplacementAPI: EndpointType {
     
     var path: String {
         switch self {
-        case .search:
-            return "/search"
-        case .lookup:
-            return "/lookup"
+        case .search: "/search"
+        case .lookup: "/lookup"
         }
     }
     
     var httpMethod: HTTPMethod {
         switch self {
-        case .search, .lookup:
-            return .get
+        case .search, .lookup: .get
         }
     }
     
@@ -58,21 +55,14 @@ extension AppleReplacementAPI: EndpointType {
         switch self {
         case .search(let term, let pretty):
             var parameters: Parameters = ["term" : term]
-            if pretty {
-                parameters["pretty"] = nil
-            }
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .lookup(let id, let entity, let pretty):
-            var paramters: Parameters = ["id" : id]
-            if let entity {
-                paramters["entity"] = entity
-            }
+            var parameters: Parameters = ["id" : id]
+            append(entity, toParameters: &parameters, withKey: "entity")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
-            if pretty {
-                paramters["pretty"] = nil
-            }
-            
-            return .requestParameters(encoding: .urlEncoding(parameters: paramters))
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         }
     }
     

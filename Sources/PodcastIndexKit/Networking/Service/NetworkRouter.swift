@@ -33,12 +33,14 @@ class NetworkRouter<Endpoint: EndpointType>: NetworkRouterProtocol {
     let urlSessionTaskDelegate: URLSessionTaskDelegate?
     var decoder: JSONDecoder
     
-    init(networking: Networking? = nil, urlSessionDelegate: URLSessionDelegate? = nil, urlSessionTaskDelegate: URLSessionTaskDelegate? = nil, decoder: JSONDecoder? = nil) {
+    init(networking: Networking? = nil, urlSessionDelegate: URLSessionDelegate? = nil, urlSessionTaskDelegate: URLSessionTaskDelegate? = nil, decoder: JSONDecoder? = nil, delegate: NetworkRouterDelegate? = nil) {
         if let networking = networking {
             self.networking = networking
         } else {
             self.networking = URLSession(configuration: URLSessionConfiguration.default, delegate: urlSessionDelegate, delegateQueue: nil)
         }
+        
+        self.delegate = delegate
         
         self.urlSessionTaskDelegate = urlSessionTaskDelegate
         

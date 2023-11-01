@@ -1,9 +1,7 @@
 import Foundation
-import Get
 
 public struct EpisodesService {
-    private let apiClient = APIClient(configuration: configuration)
-    private let basePath = "/episodes"
+    private let router = NetworkRouter<EpisodesAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns all the episodes we know about for this feed from the PodcastIndex ID.
     /// Episodes are in reverse chronological order.
@@ -19,14 +17,7 @@ public struct EpisodesService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
     public func episodes(byFeedID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]? = [("id", id)]
-        append(max, toQuery: &query, withKey: "max")
-        append(since, toQuery: &query, withKey: "since")
-        append(enclosure, toQuery: &query, withKey: "enclosure")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
+        try await router.execute(.byFeedID(id: id, since: since, max: max, enclosure: enclosure, fulltext: fulltext, pretty: pretty))
     }
     
     /// This call returns all the episodes we know about for this feed from the feed URL. Episodes are in reverse chronological order.
@@ -39,13 +30,7 @@ public struct EpisodesService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
     public func episodes(byFeedURL url: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]? = [("url", url)]
-        append(max, toQuery: &query, withKey: "max")
-        append(since, toQuery: &query, withKey: "since")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)        
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedurl", query: query)).value
+        try await router.execute(.byFeedURL(url: url, since: since, max: max, fulltext: fulltext, pretty: pretty))
     }
     
     /// This call returns all the episodes we know about for this feed from the ]Podcast GUID](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#guid).
@@ -61,13 +46,7 @@ public struct EpisodesService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
     public func episodes(byPodcastGUID guid: String, since: Date? = nil, max: Int? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]? = [("guid", guid)]
-        append(max, toQuery: &query, withKey: "max")
-        append(since, toQuery: &query, withKey: "since")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/bypodcastguid", query: query)).value
+        try await router.execute(.byPodcastGUID(guid: guid, since: since, max: max, fulltext: fulltext, pretty: pretty))
     }
     
     /// This call returns all the episodes we know about for this feed from the iTunes ID.
@@ -83,14 +62,7 @@ public struct EpisodesService {
     /// - parameter pretty: If present, makes the output “pretty” to help with debugging.
     /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
     public func episodes(byiTunesID id: String, since: Date? = nil, max: Int? = nil, enclosure: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]? = [("id", id)]
-        append(max, toQuery: &query, withKey: "max")
-        append(since, toQuery: &query, withKey: "since")
-        append(enclosure, toQuery: &query, withKey: "enclosure")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byitunesid", query: query)).value
+        try await router.execute(.byItunesID(id: id, since: since, max: max, enclosure: enclosure, fulltext: fulltext, pretty: pretty))
     }
     
     /// Get all the metadata for a single episode by passing its id.
@@ -102,11 +74,7 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - returns: an `EpisodeResponse` object containing an `Episode`.
     public func episodes(byID id: String, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResponse {
-        var query: [(String, String?)]? = [("id", id)]
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byid", query: query)).value
+        try await router.execute(.byID(id: id, fulltext: fulltext, pretty: pretty))
     }
     
     /// Get all the metadata for a single episode by passing its guid and the feed id or URL.
@@ -122,13 +90,7 @@ public struct EpisodesService {
     ///Parameter shall not have a value
     /// - returns: an `EpisodeResponse` object containing an `Episode`.
     public func episodes(byGUID guid: String, feedid: String? = nil, feedurl: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeResponse {
-        var query: [(String, String?)]? = [("guid", guid)]
-        append(feedid, toQuery: &query, withKey: "feedid")
-        append(feedurl, toQuery: &query, withKey: "feedurl")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
+        try await router.execute(.byGUID(guid: guid, feedid: feedid, feedurl: feedurl, fulltext: fulltext, pretty: pretty))
     }
     
     /// Get all episodes that have been found in the podcast:liveitem from the feeds.
@@ -138,11 +100,7 @@ public struct EpisodesService {
     ///Parameter shall not have a value
     /// - returns: an `EpisodeArrayResponse` object containing an array of `Episode`s.
     public func liveEpisodes(max: Int? = nil, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]?
-        append(max, toQuery: &query, withKey: "max")
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-                
-        return try await apiClient.send(Request(path: "\(basePath)/live", query: query)).value
+        try await router.execute(.live(max: max, pretty: pretty))
     }
     
     /// This call returns a random batch of episodes, in no specific order.
@@ -170,14 +128,122 @@ public struct EpisodesService {
     /// Parameter shall not have a value
     /// - returns: a `RandomEpisodeResponse` object containing an array of `Episode`s.
     public func randomEpisodes(max: Int? = nil, lang: String? = nil, cat: String? = nil, notcat: String? = nil, fulltext: Bool = false, pretty: Bool = false) async throws -> EpisodeArrayResponse {
-        var query: [(String, String?)]?
-        append(max, toQuery: &query, withKey: "max")
-        append(lang, toQuery: &query, withKey: "lang")
-        append(cat, toQuery: &query, withKey: "cat")
-        append(notcat, toQuery: &query, withKey: "notcat")
-        appendNil(toQuery: &query, withKey: "fulltext", forBool: fulltext)
-        appendNil(toQuery: &query, withKey: "pretty", forBool: pretty)
-        
-        return try await apiClient.send(Request(path: "\(basePath)/byfeedid", query: query)).value
+        try await router.execute(.random(max: max, lang: lang, cat: cat, notcat: notcat, fulltext: fulltext, pretty: pretty))
+    }
+}
+
+enum EpisodesAPI {
+    case byFeedID(id: String, since: Date?, max: Int?, enclosure: String?, fulltext: Bool, pretty: Bool)
+    case byFeedURL(url: String, since: Date?, max: Int?, fulltext: Bool, pretty: Bool)
+    case byPodcastGUID(guid: String, since: Date?, max: Int?, fulltext: Bool, pretty: Bool)
+    case byItunesID(id: String, since: Date?, max: Int?, enclosure: String?, fulltext: Bool, pretty: Bool)
+    case byID(id: String, fulltext: Bool, pretty: Bool)
+    case byGUID(guid: String, feedid: String?, feedurl: String?, fulltext: Bool, pretty: Bool)
+    case live(max: Int?, pretty: Bool)
+    case random(max: Int?, lang: String?, cat: String?, notcat: String?, fulltext: Bool, pretty: Bool)
+}
+
+extension EpisodesAPI: EndpointType {
+    public var baseURL: URL {
+        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
+        return url
+    }
+    
+    var path: String {
+        switch self {
+        case .byFeedID: "/episodes/byfeedid"
+        case .byFeedURL: "/episodes/byfeedurl"
+        case .byPodcastGUID: "/episodes/bypodcastguid"
+        case .byItunesID: "/episodes/byitunesid"
+        case .byID: "/episodes/byid"
+        case .byGUID: "/episodes/byguid"
+        case .live: "/episodes/live"
+        case .random: "/episodes/random"
+        }
+    }
+    
+    var httpMethod: HTTPMethod {
+        switch self {
+        case .byFeedID, .byFeedURL, .byPodcastGUID, .byItunesID, .byID, .byGUID, .live, .random: .get
+        }
+    }
+    
+    var task: HTTPTask {
+        switch self {
+        case .byFeedID(let id, let since, let max, let enclosure, let fulltext, let pretty):
+            var parameters: Parameters = ["id" : id]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(since, toParameters: &parameters, withKey: "since")
+            append(enclosure, toParameters: &parameters, withKey: "enclosure")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        case .byFeedURL(let url, let since, let max, let fulltext, let pretty):
+            var parameters: Parameters = ["url" : url]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(since, toParameters: &parameters, withKey: "since")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .byPodcastGUID(let guid, let since, let max, let fulltext, let pretty):
+            var parameters: Parameters = ["guid" : guid]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(since, toParameters: &parameters, withKey: "since")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .byItunesID(let id, let since, let max, let enclosure, let fulltext, let pretty):
+            var parameters: Parameters = ["id" : id]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(since, toParameters: &parameters, withKey: "since")
+            append(enclosure, toParameters: &parameters, withKey: "enclosure")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .byID(let id, let fulltext, let pretty):
+            var parameters: Parameters = ["id" : id]
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .byGUID(let guid, let feedid, let feedurl, let fulltext, let pretty):
+            var parameters: Parameters = ["guid" : guid]
+            append(feedid, toParameters: &parameters, withKey: "feedid")
+            append(feedurl, toParameters: &parameters, withKey: "feedurl")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .live(let max, let pretty):
+            var parameters: Parameters = [:]
+            append(max, toParameters: &parameters, withKey: "max")
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+            
+        case .random(let max, let lang, let cat, let notcat, let fulltext, let pretty):
+            var parameters: Parameters = [:]
+            append(max, toParameters: &parameters, withKey: "max")
+            append(lang, toParameters: &parameters, withKey: "lang")
+            append(cat, toParameters: &parameters, withKey: "cat")
+            append(notcat, toParameters: &parameters, withKey: "notcat")
+            appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
+            appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
+            
+            return .requestParameters(encoding: .urlEncoding(parameters: parameters))
+        }
+    }
+    
+    var headers: HTTPHeaders? {
+        nil
     }
 }
