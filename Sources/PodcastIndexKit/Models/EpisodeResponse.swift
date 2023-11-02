@@ -17,7 +17,7 @@ public struct EpisodeResponse: Codable, Hashable, Sendable {
 	public let episode: Episode?
 	
 	/// Description of the response
-	public let description: String?
+	public let episodeResponseDescription: String?
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
@@ -36,6 +36,6 @@ public struct EpisodeResponse: Codable, Hashable, Sendable {
 		case guid
 		case podcastGuid
 		case episode
-		case description
+		case episodeResponseDescription = "description"
 	}
 }

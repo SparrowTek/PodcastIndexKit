@@ -11,7 +11,7 @@ public struct RandomEpisodeResponse: Codable, Hashable, Sendable {
 	public let max: Int?
 		
 	/// Description of the response
-	public let description: String?
+	public let randomEpisodeResponseDescription: String?
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
@@ -28,6 +28,6 @@ public struct RandomEpisodeResponse: Codable, Hashable, Sendable {
 		case episodes
 		case count
 		case max
-		case description
+		case randomEpisodeResponseDescription = "description"
 	}
 }

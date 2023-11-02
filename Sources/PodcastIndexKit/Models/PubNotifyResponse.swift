@@ -2,7 +2,7 @@ public struct PubNotifyResponse: Codable, Hashable, Sendable {
 	private let responseStatus: String?
 	
 	/// Description of the response
-	public let description: String?
+	public let pubNotifyDescription: String?
 	
 	/// Indicates API request status
 	/// Allowed: true┃false
@@ -16,6 +16,6 @@ public struct PubNotifyResponse: Codable, Hashable, Sendable {
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
-		case description
+		case pubNotifyDescription = "description"
 	}
 }

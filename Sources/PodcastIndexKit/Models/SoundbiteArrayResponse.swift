@@ -5,7 +5,7 @@ public struct SoundbiteArrayResponse: Codable, Hashable, Sendable {
 	public let count: Int?
 	
 	/// Description of the response
-	public let description: String?
+	public let soundbiteArrayResponseDescription: String?
 	
 	/// List of soundbites matching request
 	public let items: [Soundbite]?
@@ -23,7 +23,7 @@ public struct SoundbiteArrayResponse: Codable, Hashable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
 		case count
-		case description
+		case soundbiteArrayResponseDescription = "description"
 		case items
 	}
 }

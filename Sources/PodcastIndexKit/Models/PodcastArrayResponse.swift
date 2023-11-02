@@ -12,7 +12,7 @@ public struct PodcastArrayResponse: Codable, Hashable, Sendable {
     public let query: String?
     
     /// Description of the response
-    public let description: String?
+    public let podcastArrayResponseDescription: String?
     
     
     /// Indicates API request status
@@ -30,6 +30,6 @@ public struct PodcastArrayResponse: Codable, Hashable, Sendable {
         case feeds
         case count
         case query
-        case description
+        case podcastArrayResponseDescription = "description"
     }
 }

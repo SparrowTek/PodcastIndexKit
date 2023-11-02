@@ -13,7 +13,7 @@ public struct Episode: Codable, Hashable, Sendable {
     
     /// The item-level description of the episode.
     /// Uses the longer of the possible fields in the feed: <description>, <itunes:summary> and <content:encoded>
-    public let description: String?
+    public let episodeDescription: String?
     
     /// The unique identifier for the episode
     public let guid: String?
@@ -131,6 +131,47 @@ public struct Episode: Codable, Hashable, Sendable {
     /// Status of the livestream
     /// Allowed: ended┃live
     public let status: LivestreamStatus?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case link
+        case episodeDescription = "description"
+        case guid
+        case datePublished
+        case datePublishedPretty
+        case dateCrawled
+        case enclosureUrl
+        case enclosureType
+        case enclosureLength
+        case contentLink
+        case duration
+        case explicit
+        case episode
+        case episodeType
+        case season
+        case image
+        case feedItunesId
+        case feedImage
+        case feedId
+        case feedLanguage
+        case feedDead
+        case feedTitle
+        case feedDuplicateOf
+        case chaptersUrl
+        case transcriptUrl
+        case feedImageUrlHash
+        case imageUrlHash
+        case transcripts
+        case persons
+        case socialInteract
+        case value
+        case soundbite
+        case soundbites
+        case startTime
+        case endTime
+        case status
+    }
 }
 
 public enum LivestreamStatus: String, Codable, Hashable, Sendable {

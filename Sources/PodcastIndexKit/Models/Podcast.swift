@@ -20,7 +20,7 @@ public struct Podcast: Codable, Hashable, Sendable {
     
     /// The channel-level description
     /// Uses the longer of the possible fields in the feed: <description>, <itunes:summary> and <content:encoded>
-    public let description: String?
+    public let podcastDescription: String?
     
     /// The channel-level author element.
     /// Usually iTunes specific, but could be from another namespace if not present.
@@ -131,6 +131,43 @@ public struct Podcast: Codable, Hashable, Sendable {
     /// Information for donation/funding the podcast.
     /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) for more information.
     public let funding: PodcastFunding?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case url
+        case originalUrl
+        case link
+        case podcastDescription = "description"
+        case author
+        case ownerName
+        case image
+        case artwork
+        case lastUpdateTime
+        case lastCrawlTime
+        case lastParseTime
+        case lastGoodHttpStatusTime
+        case lastHttpStatus
+        case contentType
+        case itunesId
+        case generator
+        case language
+        case type
+        case dead
+        case crawlErrors
+        case parseErrors
+        case categories
+        case locked
+        case podcastGuid
+        case episodeCount
+        case imageUrlHash
+        case newestItemPubdate
+        case explicit
+        case itunesType
+        case chash
+        case value
+        case funding
+    }
 }
 
 public enum PodcastType: Int, Codable, Hashable, Sendable {

@@ -21,12 +21,12 @@ public struct ValueResponse: Codable, Hashable, Sendable {
 	public let value: Value?
 	
 	/// Description of the response
-	public let description: String?
+	public let valueResponseDescription: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
 		case query
 		case value
-		case description
+        case valueResponseDescription = "description"
 	}
 }

@@ -16,7 +16,7 @@ public struct DataResponse: Codable, Hashable, Sendable {
 	public let since: Date?
 	
 	/// Description of the response
-	public let description: String?
+	public let dataResponseDescription: String?
 	
 	/// Value to pass as since parameter to get next batch of data
 	public let nextSince: Int?
@@ -40,7 +40,7 @@ public struct DataResponse: Codable, Hashable, Sendable {
 		case itemCount
 		case max
 		case since
-		case description
+		case dataResponseDescription = "description"
 		case nextSince
 		case data
 	}

@@ -15,11 +15,11 @@ public struct StatsResponse: Codable, Hashable, Sendable {
 	public let stats: [StatProperties]?
 	
 	/// Description of the response
-	public let description: String?
+	public let statsResponseDescription: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
 		case stats
-		case description
+		case statsResponseDescription = "description"
 	}
 }

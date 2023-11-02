@@ -18,12 +18,12 @@ public struct CategoriesResponse: Codable, Hashable, Sendable {
 	public let count: Int?
 	
 	/// Description of the response
-	public let description: String?
+	public let categoriesResponseDescription: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case responseStatus = "status"
 		case feeds
 		case count
-		case description
+		case categoriesResponseDescription = "description"
 	}
 }
