@@ -35,7 +35,7 @@ PodcastIndexKit.setup(apiKey: "YOUR_API_KEY", apiSecret: "YOUR_API_SECRET", user
 
 ## Documentation
 
-Click here to see all [documentation](https://sparrowtek.com/PodcastIndexKit/documentation/podcastindexkit/).
+Click here to see all [documentation](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit/0.2.1/documentation/podcastindexkit).
 
 ## Note
 
