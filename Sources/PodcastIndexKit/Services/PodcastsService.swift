@@ -169,7 +169,8 @@ extension PodcastsAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byTag(let max, let startAt, let pretty):
-            var parameters: Parameters = ["podcast-value" : nil]
+            var parameters: Parameters = [:]
+            appendNil(toParameters: &parameters, withKey: "podcast-value", forBool: true)
             append(max, toParameters: &parameters, withKey: "max")
             append(startAt, toParameters: &parameters, withKey: "start_at")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
