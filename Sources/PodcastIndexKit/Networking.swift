@@ -1,5 +1,5 @@
 import Foundation
-import Crypto
+import CryptoKit
 
 extension JSONDecoder {
     static var podcastIndexDecoder: JSONDecoder {        
