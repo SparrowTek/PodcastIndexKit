@@ -23,7 +23,7 @@ let package = Package(
 )
 ```
 
-Swift 5.8 is required in order to run the plugin.
+Swift 5.9 is required in order to run the plugin.
 
 ### Setup
 
