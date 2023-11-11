@@ -12,7 +12,7 @@ public struct StatsResponse: Codable, Hashable, Sendable {
 	}
 	
 	/// An array statistic properties
-	public let stats: [StatProperties]?
+	public let stats: StatProperties?
 	
 	/// Description of the response
 	public let statsResponseDescription: String?
