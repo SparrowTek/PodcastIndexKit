@@ -1,7 +1,7 @@
 import Foundation
 
 /// /// All of the information about an Episode
-public struct Episode: Codable, Hashable, Sendable {
+public struct Episode: Codable, Hashable, Identifiable, Sendable {
     /// The internal PodcastIndex.org episode ID.
     public let id: Int?
     

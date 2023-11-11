@@ -1,4 +1,4 @@
-public struct Category: Codable, Hashable, Sendable {
+public struct Category: Codable, Hashable, Identifiable, Sendable {
 	/// The internal PodcastIndex.org category ID.
 	public let id: Int?
 	

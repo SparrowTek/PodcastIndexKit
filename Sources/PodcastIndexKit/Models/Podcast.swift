@@ -1,7 +1,7 @@
 import Foundation
 
 /// All of the information about a Podcast
-public struct Podcast: Codable, Hashable, Sendable {
+public struct Podcast: Codable, Hashable, Identifiable, Sendable {
     
     /// The internal PodcastIndex.org Feed ID.
     public let id: Int?
