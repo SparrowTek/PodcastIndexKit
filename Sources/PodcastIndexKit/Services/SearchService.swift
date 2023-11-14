@@ -139,4 +139,3 @@ extension SearchAPI: EndpointType {
         nil
     }
 }
-

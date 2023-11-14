@@ -2,11 +2,15 @@ import Foundation
 import CryptoKit
 
 extension JSONDecoder {
-    static var podcastIndexDecoder: JSONDecoder {        
+    static var podcastIndexDecoder: JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        // TODO: need to encode and decode dates in this format - "2023-05-19T09:13:38-0500"
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let timestampInSeconds = try container.decode(Int.self)
+            return Date(timeIntervalSince1970: TimeInterval(timestampInSeconds))
+        }
         
         return decoder
     }
