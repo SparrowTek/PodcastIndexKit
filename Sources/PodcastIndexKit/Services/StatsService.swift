@@ -1,6 +1,6 @@
 import Foundation
 
-public struct StatsService {
+public struct StatsService: Sendable {
     private let router = NetworkRouter<StatsAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// Return the most recent index statistics.

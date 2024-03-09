@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SearchService {
+public struct SearchService: Sendable {
     private let router = NetworkRouter<SearchAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns all of the feeds that match the search terms in the title, author or owner of the feed.

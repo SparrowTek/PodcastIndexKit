@@ -1,6 +1,6 @@
 import Foundation
 
-public struct CategoriesService {
+public struct CategoriesService: Sendable {
     private let router = NetworkRouter<CategoriesAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
 	/// Return all the possible categories supported by the index.

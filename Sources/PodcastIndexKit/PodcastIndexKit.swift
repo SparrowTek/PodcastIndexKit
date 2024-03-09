@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Observable
-public final class PodcastIndexKit {
+public final class PodcastIndexKit: Sendable {
     public init() { }
     
     static public func setup(apiKey: String, apiSecret: String, userAgent: String) {

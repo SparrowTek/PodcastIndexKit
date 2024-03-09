@@ -1,6 +1,6 @@
 import Foundation
 
-public struct HubService {
+public struct HubService: Sendable {
     private let router = NetworkRouter<HubAPI>(decoder: .podcastIndexDecoder)
     
     /// Notify the index that a feed has changed

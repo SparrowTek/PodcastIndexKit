@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AppleReplacementService {
+public struct AppleReplacementService: Sendable {
     private let router = NetworkRouter<AppleReplacementAPI>(decoder: .podcastIndexDecoder)
 	
 	/// Replaces the Apple search API but returns data from the Podcast Index database.

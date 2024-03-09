@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ValueService {
+public struct ValueService: Sendable {
     private let router = NetworkRouter<ValueAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns the information for supporting the podcast via one of the "Value for Value" methods from the PodcastIndex ID.

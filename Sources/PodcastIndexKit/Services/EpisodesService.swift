@@ -1,6 +1,6 @@
 import Foundation
 
-public struct EpisodesService {
+public struct EpisodesService: Sendable {
     private let router = NetworkRouter<EpisodesAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns all the episodes we know about for this feed from the PodcastIndex ID.

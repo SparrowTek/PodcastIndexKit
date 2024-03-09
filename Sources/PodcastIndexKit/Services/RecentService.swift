@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RecentService {
+public struct RecentService: Sendable {
     private let router = NetworkRouter<RecentAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
     
     /// This call returns the most recent max number of episodes globally across the whole index, in reverse chronological order.
