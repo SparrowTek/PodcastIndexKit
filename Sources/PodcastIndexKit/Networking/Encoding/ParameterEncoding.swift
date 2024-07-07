@@ -6,12 +6,13 @@ protocol ParameterEncoder {
     func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws
 }
 
-enum ParameterEncoding {
+@PodcastActor
+enum ParameterEncoding: Sendable {
     
     case urlEncoding(parameters: Parameters)
     case jsonEncoding(parameters: Parameters)
     case jsonDataEncoding(data: Data?)
-    case jsonEncodableEncoding(encodable: Encodable)
+    case jsonEncodableEncoding(encodable: PodcastEncodable)
     case urlAndJsonEncoding(urlParameters: Parameters, bodyParameters: Parameters)
     
     func encode(urlRequest: inout URLRequest) throws {

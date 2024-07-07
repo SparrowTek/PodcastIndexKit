@@ -25,18 +25,18 @@ extension JSONEncoder {
     }
 }
 
-var appleReplacementBaseURL = "https://api.podcastindex.org"
-var indexURL = "https://api.podcastindex.org/api/1.0"
-let routerDelegate = PodcastIndexRouterDelegate()
-
 class PodcastIndexRouterDelegate: NetworkRouterDelegate {
+    func shouldRetry(error: any Error, attempts: Int) async throws -> Bool {
+        false
+    }
+    
     func intercept(_ request: inout URLRequest) async {
         let errorMessage = """
 PODCASTINDEXKIT Error: your apiKey, secretKey, and userAgent were not set.
 Please follow the intructions in the README for setting up the PodcastIndexKit framework
 Hint: You must call the static setup(apiKey: String, apiSecret: String, userAgent: String) method before using the framework
 """
-        guard let apiKey = PodcastIndexKit.apiKey, let apiSecret = PodcastIndexKit.apiSecret, let userAgent = PodcastIndexKit.userAgent else { fatalError(errorMessage) }
+        guard let apiKey = PodcastEnvironment.current.apiKey, let apiSecret = PodcastEnvironment.current.apiSecret, let userAgent = PodcastEnvironment.current.userAgent else { fatalError(errorMessage) }
         
         // prep for crypto
         let apiHeaderTime = String(Int(Date().timeIntervalSince1970))

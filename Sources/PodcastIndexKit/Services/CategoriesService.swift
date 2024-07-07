@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct CategoriesService: Sendable {
-    private let router = NetworkRouter<CategoriesAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<CategoriesAPI> = {
+        let router = NetworkRouter<CategoriesAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
 	/// Return all the possible categories supported by the index.
 	/// Example: [https://api.podcastindex.org/api/1.0/categories/list?pretty](https://api.podcastindex.org/api/1.0/categories/list?pretty)
@@ -20,8 +27,11 @@ enum CategoriesAPI {
 
 extension CategoriesAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

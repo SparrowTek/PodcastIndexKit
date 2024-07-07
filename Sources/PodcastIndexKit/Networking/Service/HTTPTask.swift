@@ -1,4 +1,4 @@
-enum HTTPTask {
+enum HTTPTask: Sendable {
     case request
     
     case requestParameters(encoding: ParameterEncoding)

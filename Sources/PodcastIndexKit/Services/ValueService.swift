@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct ValueService: Sendable {
-    private let router = NetworkRouter<ValueAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<ValueAPI> = {
+        let router = NetworkRouter<ValueAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
     /// This call returns the information for supporting the podcast via one of the "Value for Value" methods from the PodcastIndex ID.
     /// Additionally, the value block data can be accessed using static JSON files (updated every 15 minutes).
@@ -33,8 +40,11 @@ enum ValueAPI {
 
 extension ValueAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

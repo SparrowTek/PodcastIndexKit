@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct EpisodesService: Sendable {
-    private let router = NetworkRouter<EpisodesAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<EpisodesAPI> = {
+        let router = NetworkRouter<EpisodesAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
     /// This call returns all the episodes we know about for this feed from the PodcastIndex ID.
     /// Episodes are in reverse chronological order.
@@ -145,8 +152,11 @@ enum EpisodesAPI {
 
 extension EpisodesAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

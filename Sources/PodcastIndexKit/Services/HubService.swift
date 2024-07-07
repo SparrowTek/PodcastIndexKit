@@ -1,7 +1,10 @@
 import Foundation
 
+@PodcastActor
 public struct HubService: Sendable {
     private let router = NetworkRouter<HubAPI>(decoder: .podcastIndexDecoder)
+    
+    public init() {}
     
     /// Notify the index that a feed has changed
     ///
@@ -23,8 +26,11 @@ enum HubAPI {
 
 extension HubAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

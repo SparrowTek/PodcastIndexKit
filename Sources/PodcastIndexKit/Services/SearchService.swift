@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct SearchService: Sendable {
-    private let router = NetworkRouter<SearchAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<SearchAPI> = {
+        let router = NetworkRouter<SearchAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
     /// This call returns all of the feeds that match the search terms in the title, author or owner of the feed.
     /// This is ordered by the last-released episode, with the latest at the top of the results.
@@ -74,8 +81,11 @@ enum SearchAPI {
 
 extension SearchAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

@@ -1,6 +1,6 @@
 import Foundation
 
-enum StatusCode: Int {
+public enum StatusCode: Int, Sendable {
     // 1xx
     case continueCode = 100
     case switchingProtocols = 101

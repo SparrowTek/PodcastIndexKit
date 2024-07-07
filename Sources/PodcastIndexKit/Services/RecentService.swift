@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct RecentService: Sendable {
-    private let router = NetworkRouter<RecentAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<RecentAPI> = {
+        let router = NetworkRouter<RecentAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
     /// This call returns the most recent max number of episodes globally across the whole index, in reverse chronological order.
     ///
@@ -97,8 +104,11 @@ enum RecentAPI {
 
 extension RecentAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

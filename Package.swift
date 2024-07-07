@@ -20,6 +20,8 @@ let package = Package(
     targets: [
         .target(
             name: "PodcastIndexKit",
-            dependencies: []),
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
+            ]),
     ]
 )

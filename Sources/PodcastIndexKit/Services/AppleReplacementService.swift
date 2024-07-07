@@ -1,8 +1,11 @@
 import Foundation
 
+@PodcastActor
 public struct AppleReplacementService: Sendable {
     private let router = NetworkRouter<AppleReplacementAPI>(decoder: .podcastIndexDecoder)
 	
+    public init() {}
+    
 	/// Replaces the Apple search API but returns data from the Podcast Index database.
 	/// Note: No API key needed for this endpoint.
 	///
@@ -34,8 +37,11 @@ enum AppleReplacementAPI {
 
 extension AppleReplacementAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: appleReplacementBaseURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.appleReplacementBaseURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {

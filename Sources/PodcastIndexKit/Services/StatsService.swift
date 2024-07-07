@@ -1,7 +1,14 @@
 import Foundation
 
+@PodcastActor
 public struct StatsService: Sendable {
-    private let router = NetworkRouter<StatsAPI>(decoder: .podcastIndexDecoder, delegate: routerDelegate)
+    private let router: NetworkRouter<StatsAPI> = {
+        let router = NetworkRouter<StatsAPI>(decoder: .podcastIndexDecoder)
+        router.delegate = PodcastEnvironment.current.routerDelegate
+        return router
+    }()
+    
+    public init() {}
     
     /// Return the most recent index statistics.
     /// Hourly statistics can also be access at [https://stats.podcastindex.org/daily_counts.json](https://stats.podcastindex.org/daily_counts.json)
@@ -20,8 +27,11 @@ enum StatsAPI {
 
 extension StatsAPI: EndpointType {
     public var baseURL: URL {
-        guard let url = URL(string: indexURL) else { fatalError("baseURL not configured.") }
-        return url
+        get async {
+            let environmentURL = await PodcastEnvironment.current.indexURL
+            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
+            return url
+        }
     }
     
     var path: String {
