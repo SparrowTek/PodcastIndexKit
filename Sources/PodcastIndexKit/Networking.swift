@@ -25,6 +25,7 @@ extension JSONEncoder {
     }
 }
 
+@PodcastActor
 class PodcastIndexRouterDelegate: NetworkRouterDelegate {
     func shouldRetry(error: any Error, attempts: Int) async throws -> Bool {
         false
