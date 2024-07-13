@@ -37,22 +37,30 @@ public struct EpisodeArrayResponse: Codable, Hashable, Sendable {
 }
 
 public enum EpisodeResponsesQuery: Codable, Hashable, Sendable {
-    /// Single ID: Single ID passed to request
-    case single(String)
+    /// Single String ID: Single ID passed to request
+    case singleString(String)
     
-    /// Multiple IDs: IDs passed to request
-    case multiple([String])
+    /// Multiple String IDs: IDs passed to request
+    case multipleStrings([String])
+    
+    /// Single Int ID: Single ID passed to request
+    case singleInt(Int)
+    
+    /// Multiple Int IDs: IDs passed to request
+    case multipleInts([Int])
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         
         if let singleString = try? container.decode(String.self) {
-            self = .single(singleString)
-        }
-        else if let stringArray = try? container.decode([String].self) {
-            self = .multiple(stringArray)
-        }
-        else {
+            self = .singleString(singleString)
+        } else if let singleInt = try? container.decode(Int.self) {
+            self = .singleInt(singleInt)
+        } else if let stringArray = try? container.decode([String].self) {
+            self = .multipleStrings(stringArray)
+        } else if let intArray = try? container.decode([Int].self) {
+            self = .multipleInts(intArray)
+        } else {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid JSON structure encountered")
         }
     }
@@ -61,10 +69,14 @@ public enum EpisodeResponsesQuery: Codable, Hashable, Sendable {
         var container = encoder.singleValueContainer()
         
         switch self {
-        case .single(let singleString):
+        case .singleString(let singleString):
             try container.encode(singleString)
-        case .multiple(let stringArray):
+        case .singleInt(let singleInt):
+            try container.encode(singleInt)
+        case .multipleStrings(let stringArray):
             try container.encode(stringArray)
+        case .multipleInts(let intArray):
+            try container.encode(intArray)
         }
     }
 }
