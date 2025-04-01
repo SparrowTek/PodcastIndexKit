@@ -3,7 +3,7 @@ public struct PodcastArrayResponse: Codable, Hashable, Sendable {
     private let responseStatus: String?
     
     /// List of feeds matching request
-    public let feeds: [Podcast]?
+    public let feeds: [Podcast]
     
     /// Number of items returned in request
     public let count: Int?
@@ -25,9 +25,39 @@ public struct PodcastArrayResponse: Codable, Hashable, Sendable {
         }
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        responseStatus = try container.decodeIfPresent(String.self, forKey: .responseStatus)
+        count = try container.decodeIfPresent(Int.self, forKey: .count)
+        query = try container.decodeIfPresent(String.self, forKey: .query)
+        podcastArrayResponseDescription = try container.decodeIfPresent(String.self, forKey: .podcastArrayResponseDescription)
+        
+        // Try decoding 'feeds' first, if that fails, try 'items'
+        feeds = if let feeds = try? container.decodeIfPresent([Podcast].self, forKey: .feeds) {
+            feeds
+        } else if let items = try? container.decodeIfPresent([Podcast].self, forKey: .items) {
+            items
+        } else {
+            []
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encodeIfPresent(responseStatus, forKey: .responseStatus)
+        try container.encodeIfPresent(count, forKey: .count)
+        try container.encodeIfPresent(query, forKey: .query)
+        try container.encodeIfPresent(podcastArrayResponseDescription, forKey: .podcastArrayResponseDescription)
+        
+        // When encoding, always use 'feeds' key for consistency
+        try container.encode(feeds, forKey: .feeds)
+    }
+    
     enum CodingKeys: String, CodingKey {
         case responseStatus = "status"
-        case feeds
+        case feeds, items
         case count
         case query
         case podcastArrayResponseDescription = "description"
