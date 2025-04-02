@@ -181,7 +181,7 @@ extension EpisodesAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .byFeedID(let id, let since, let max, let enclosure, let fulltext, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             append(enclosure, toParameters: &parameters, withKey: "enclosure")
@@ -190,7 +190,7 @@ extension EpisodesAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byFeedURL(let url, let since, let max, let fulltext, let pretty):
-            var parameters: Parameters = ["url" : url]
+            var parameters: Parameters = [URLQueryItem(name: "url", value: url)]
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
@@ -199,7 +199,7 @@ extension EpisodesAPI: EndpointType {
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .byPodcastGUID(let guid, let since, let max, let fulltext, let pretty):
-            var parameters: Parameters = ["guid" : guid]
+            var parameters: Parameters = [URLQueryItem(name: "guid", value: guid)]
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
@@ -208,7 +208,7 @@ extension EpisodesAPI: EndpointType {
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .byItunesID(let id, let since, let max, let enclosure, let fulltext, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             append(enclosure, toParameters: &parameters, withKey: "enclosure")
@@ -218,14 +218,14 @@ extension EpisodesAPI: EndpointType {
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .byID(let id, let fulltext, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .byGUID(let guid, let feedid, let feedurl, let fulltext, let pretty):
-            var parameters: Parameters = ["guid" : guid]
+            var parameters: Parameters = [URLQueryItem(name: "guid", value: guid)]
             append(feedid, toParameters: &parameters, withKey: "feedid")
             append(feedurl, toParameters: &parameters, withKey: "feedurl")
             appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
@@ -234,14 +234,14 @@ extension EpisodesAPI: EndpointType {
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .live(let max, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
             
         case .random(let max, let lang, let cat, let notcat, let fulltext, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(lang, toParameters: &parameters, withKey: "lang")
             append(cat, toParameters: &parameters, withKey: "cat")

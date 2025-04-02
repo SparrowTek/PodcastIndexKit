@@ -159,27 +159,27 @@ extension PodcastsAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .byFeedID(let id, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byFeedURL(let url, let pretty):
-            var parameters: Parameters = ["url" : url]
+            var parameters: Parameters = [URLQueryItem(name: "url", value: url)]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byGUID(let guid, let pretty):
-            var parameters: Parameters = ["guid" : guid]
+            var parameters: Parameters = [URLQueryItem(name: "guid", value: guid)]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byItunesID(let id, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byTag(let max, let startAt, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             appendNil(toParameters: &parameters, withKey: "podcast-value", forBool: true)
             append(max, toParameters: &parameters, withKey: "max")
             append(startAt, toParameters: &parameters, withKey: "start_at")
@@ -187,13 +187,13 @@ extension PodcastsAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byMedium(let medium, let max, let pretty):
-            var parameters: Parameters = ["medium" : medium]
+            var parameters: Parameters = [URLQueryItem(name: "medium", value: medium)]
             append(max, toParameters: &parameters, withKey: "max")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .trending(let max, let since, let lang, let cat, let notcat, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             append(lang, toParameters: &parameters, withKey: "lang")
@@ -203,7 +203,7 @@ extension PodcastsAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .dead(let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))

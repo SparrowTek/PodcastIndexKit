@@ -130,7 +130,7 @@ extension RecentAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .episodes(let max, let excludeString, let before, let fulltext, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(excludeString, toParameters: &parameters, withKey: "excludeString")
             append(before, toParameters: &parameters, withKey: "before")
@@ -139,7 +139,7 @@ extension RecentAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .feeds(let max, let since, let lang, let cat, let notcat, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             append(lang, toParameters: &parameters, withKey: "lang")
@@ -149,7 +149,7 @@ extension RecentAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .newFeeds(let max, let since, let feedid, let desc, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             append(feedid, toParameters: &parameters, withKey: "feedid")
@@ -158,14 +158,14 @@ extension RecentAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .data(let max, let since, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             append(since, toParameters: &parameters, withKey: "since")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .soundBites(let max, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(max, toParameters: &parameters, withKey: "max")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             

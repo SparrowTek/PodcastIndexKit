@@ -63,11 +63,11 @@ extension ValueAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .byFeedID(let id, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: "\(id)")]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byFeedURL(let url, let pretty):
-            var parameters: Parameters = ["url" : url]
+            var parameters: Parameters = [URLQueryItem(name: "url", value: url)]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         }

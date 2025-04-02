@@ -1,6 +1,6 @@
 import Foundation
 
-typealias Parameters = [String : Any]
+typealias Parameters = [URLQueryItem]
 
 protocol ParameterEncoder {
     func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws

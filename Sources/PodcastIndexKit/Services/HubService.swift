@@ -48,7 +48,7 @@ extension HubAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .pubNotify(let id, let url, let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             append(id, toParameters: &parameters, withKey: "id")
             append(url, toParameters: &parameters, withKey: "url")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)

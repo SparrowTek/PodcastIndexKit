@@ -60,11 +60,11 @@ extension AppleReplacementAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .search(let term, let pretty):
-            var parameters: Parameters = ["term" : term]
+            var parameters: Parameters = [URLQueryItem(name: "term", value: term)]
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .lookup(let id, let entity, let pretty):
-            var parameters: Parameters = ["id" : id]
+            var parameters: Parameters = [URLQueryItem(name: "id", value: id)]
             append(entity, toParameters: &parameters, withKey: "entity")
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             

@@ -55,28 +55,18 @@ struct URLParameterEncoder: ParameterEncoder {
     }
     
     func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
-        
         guard let url = urlRequest.url else { throw NetworkError.missingURL }
         
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
-            let percentEncodedQuery = (urlComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(parameters)
-            urlComponents.percentEncodedQuery = percentEncodedQuery
+            var items = urlComponents.queryItems ?? []
+            items.append(contentsOf: parameters)
+            urlComponents.queryItems = items
             urlRequest.url = urlComponents.url
         }
         
         if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
             urlRequest.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
         }
-    }
-    
-    private func query(_ parameters: [String: Any]) -> String {
-        var components: [(String, String)] = []
-        
-        for key in parameters.keys.sorted(by: <) {
-            let value = parameters[key]!
-            components += queryComponents(fromKey: key, value: value)
-        }
-        return components.map { "\($0)=\($1)" }.joined(separator: "&")
     }
     
     /// Creates a percent-escaped, URL encoded query string components from the given key-value pair recursively.

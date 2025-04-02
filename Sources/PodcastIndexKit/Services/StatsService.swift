@@ -49,7 +49,7 @@ extension StatsAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .current(let pretty):
-            var parameters: Parameters = [:]
+            var parameters: Parameters = []
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         }

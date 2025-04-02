@@ -106,7 +106,7 @@ extension SearchAPI: EndpointType {
     var task: HTTPTask {
         switch self {
         case .byTerm(let q, let val, let max, let aponly, let clean, let fulltext, let pretty):
-            var parameters: Parameters = ["q" : q]
+            var parameters: Parameters = [URLQueryItem(name: "q", value: q)]
             append(val, toParameters: &parameters, withKey: "val")
             append(max, toParameters: &parameters, withKey: "max")
             append(aponly, toParameters: &parameters, withKey: "aponly")
@@ -116,7 +116,7 @@ extension SearchAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byTitle(let q, let val, let max, let clean, let fulltext, let pretty, let similar):
-            var parameters: Parameters = ["q" : q]
+            var parameters: Parameters = [URLQueryItem(name: "q", value: q)]
             append(val, toParameters: &parameters, withKey: "val")
             append(max, toParameters: &parameters, withKey: "max")
             appendNil(toParameters: &parameters, withKey: "clean", forBool: clean)
@@ -126,14 +126,14 @@ extension SearchAPI: EndpointType {
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .byPerson(let q, let max, let fulltext, let pretty):
-            var parameters: Parameters = ["q" : q]
+            var parameters: Parameters = [URLQueryItem(name: "q", value: q)]
             append(max, toParameters: &parameters, withKey: "max")
             appendNil(toParameters: &parameters, withKey: "fulltext", forBool: fulltext)
             appendNil(toParameters: &parameters, withKey: "pretty", forBool: pretty)
             
             return .requestParameters(encoding: .urlEncoding(parameters: parameters))
         case .musicByTerm(let q, let val, let max, let aponly, let clean, let fulltext, let pretty):
-            var parameters: Parameters = ["q" : q]
+            var parameters: Parameters = [URLQueryItem(name: "q", value: q)]
             append(val, toParameters: &parameters, withKey: "val")
             append(max, toParameters: &parameters, withKey: "max")
             append(aponly, toParameters: &parameters, withKey: "aponly")
