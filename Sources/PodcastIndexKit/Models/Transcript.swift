@@ -19,11 +19,20 @@ public struct Transcript: Codable, Hashable, Sendable {
     
     /// The URL of the transcript file.
     public let rel: String?
+    
+    public enum TranscriptType: String, Codable, Hashable, Sendable {
+        case jsonApplication = "application/json"
+        case srtApplication = "application/srt"
+        case htmlText = "text/html"
+        case plainText = "text/plain"
+        case srtText = "text/srt"
+        case vttText = "text/vtt"
+    }
 }
 
-public enum TranscriptType: String, Codable, Hashable, Sendable {
-    case text
-    case html
-    case srt
-    case vtt
-} 
+//public enum TranscriptType: String, Codable, Hashable, Sendable {
+//    case text
+//    case html
+//    case srt
+//    case vtt
+//}

@@ -248,23 +248,3 @@ public struct Person: Codable, Hashable, Sendable {
     /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person) for more information.
     public let img: String?
 }
-
-public struct Transcript: Codable, Hashable, Sendable {
-    
-    /// URL of the podcast transcript.
-    public let url: String?
-    
-    /// Mime type of the file such as text/plain, text/html, application/srt, text/vtt, application/json
-    /// Allowed: application/json┃application/srt┃text/html┃text/plain┃text/srt┃text/vtt
-    public let type: TranscriptType?
-    
-    public enum TranscriptType: String, Codable, Hashable, Sendable {
-        case jsonApplication = "application/json"
-        case srtApplication = "application/srt"
-        case htmlText = "text/html"
-        case plainText = "text/plain"
-        case srtText = "text/srt"
-        case vttText = "text/vtt"
-    }
-    
-}
