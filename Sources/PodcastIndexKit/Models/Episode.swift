@@ -121,6 +121,10 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
     /// ⮕ [ Soundbite for episode ]
     public let soundbites: [Soundbite]?
     
+    /// Transcript information for the episode.
+    /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript) for more information.
+    public let transcript: Transcript?
+    
     // MARK: Live streams
     /// The time the livestream starts
     public let startTime: Int?
@@ -168,6 +172,7 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
         case value
         case soundbite
         case soundbites
+        case transcript
         case startTime
         case endTime
         case status

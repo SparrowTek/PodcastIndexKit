@@ -36,7 +36,7 @@ public struct Podcast: Codable, Hashable, Identifiable, Sendable {
     /// The seemingly best artwork we can find for the feed. Might be the same as image in most instances.
     public let artwork: String?
     
-    /// The channel-level pubDate for the feed, if it’s sane. If not, this is a heuristic value, arrived at by analyzing other parts of the feed, like item-level pubDates.
+    /// The channel-level pubDate for the feed, if it's sane. If not, this is a heuristic value, arrived at by analyzing other parts of the feed, like item-level pubDates.
     public let lastUpdateTime: Date?
     
     /// The last time we attempted to pull this feed from its url.
@@ -73,11 +73,11 @@ public struct Podcast: Codable, Hashable, Identifiable, Sendable {
     /// At some point, we give up trying to process a feed and mark it as dead. This is usually after 1000 errors without a successful pull/parse cycle. Once the feed is marked dead, we only check it once per month.
     public let dead: Int?
     
-    /// The number of errors we’ve encountered trying to pull a copy of the feed. Errors are things like a 500 or 404 response, a server timeout, bad encoding, etc.
+    /// The number of errors we've encountered trying to pull a copy of the feed. Errors are things like a 500 or 404 response, a server timeout, bad encoding, etc.
     public let crawlErrors: Int?
     
-    /// The number of errors we’ve encountered trying to parse the feed content. Errors here are things like not well-formed xml, bad character encoding, etc.
-    /// We fix many of these types of issues on the fly when parsing. We only increment the errors count when we can’t fix it.
+    /// The number of errors we've encountered trying to parse the feed content. Errors here are things like not well-formed xml, bad character encoding, etc.
+    /// We fix many of these types of issues on the fly when parsing. We only increment the errors count when we can't fix it.
     public let parseErrors: Int?
     
     /// An array of categories, where the index is the Category ID and the value is the Category Name.
@@ -109,6 +109,10 @@ public struct Podcast: Codable, Hashable, Identifiable, Sendable {
     
     /// The type as specified by the itunes:type in the feed XML.
     public let itunesType: String?
+    
+    /// The medium as specified by the podcast:medium tag in the feed XML.
+    /// See the [podcast namespace spec](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#medium) for more information.
+    public let medium: String?
     
     /// The md5 hash of the following feed items in hex format.
     /// - title
@@ -164,6 +168,7 @@ public struct Podcast: Codable, Hashable, Identifiable, Sendable {
         case newestItemPubdate
         case explicit
         case itunesType
+        case medium
         case chash
         case value
         case funding
