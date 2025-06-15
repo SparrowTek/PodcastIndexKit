@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 @PodcastActor
 protocol NetworkRouterDelegate: AnyObject {
     func intercept(_ request: inout URLRequest) async
@@ -41,7 +45,11 @@ internal class NetworkRouter<Endpoint: EndpointType>: NetworkRouterProtocol {
         if let networking = networking {
             self.networking = networking
         } else {
+            #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
             self.networking = URLSession(configuration: URLSessionConfiguration.default, delegate: urlSessionDelegate, delegateQueue: nil)
+            #else
+            self.networking = AsyncHTTPClientNetworking()
+            #endif
         }
         
         self.urlSessionTaskDelegate = urlSessionTaskDelegate

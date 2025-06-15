@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -16,10 +16,15 @@ let package = Package(
             name: "PodcastIndexKit",
             targets: ["PodcastIndexKit"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.26.0"),
+    ],
     targets: [
         .target(
             name: "PodcastIndexKit",
+            dependencies: [
+                .product(name: "AsyncHTTPClient", package: "async-http-client"),
+            ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]),
