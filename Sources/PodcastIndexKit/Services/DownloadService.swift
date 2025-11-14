@@ -5,7 +5,7 @@ import os.log
 public final class DownloadService: NSObject {
     public static let shared = DownloadService()
     private typealias ContinuationID = UUID
-    private static let sessionIdentifier = "com.sparrowtek.podcastindexkit.background-downloads"
+    nonisolated private static let sessionIdentifier = "com.sparrowtek.podcastindexkit.background-downloads"
     private let logger = Logger(subsystem: "com.sparrowtek.podcastindexkit", category: "DownloadService")
     private let fileManager = FileManager()
     private let encoder = JSONEncoder()
@@ -480,3 +480,4 @@ private struct PendingCompletion: Codable, Sendable {
     let bytesExpected: Int64
     let fileSize: Int64
 }
+
