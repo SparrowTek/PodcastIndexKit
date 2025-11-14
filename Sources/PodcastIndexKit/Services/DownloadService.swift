@@ -229,6 +229,12 @@ public final class DownloadService: NSObject {
     }
 
     // MARK: - Delegate helpers
+
+    private func handleBackgroundURLSessionFinished() async {
+        let handler = backgroundCompletionHandlers.removeValue(forKey: Self.sessionIdentifier)
+        handler?()
+    }
+
     private func handleDownloadFinished(taskDescription: String?, location: URL) async {
         guard let episodeID = episodeID(for: taskDescription), let record = downloads[episodeID] else {
             cleanupTemporaryFile(at: location)
@@ -358,9 +364,7 @@ extension DownloadService: URLSessionTaskDelegate {
     nonisolated public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         guard session.configuration.identifier == Self.sessionIdentifier else { return }
         Task { [weak self] in
-            guard let self else { return }
-            let handler = backgroundCompletionHandlers.removeValue(forKey: Self.sessionIdentifier)
-            handler?()
+            await self?.handleBackgroundURLSessionFinished()
         }
     }
 }
