@@ -27,7 +27,7 @@ public final class DownloadService: NSObject {
     private var backgroundCompletionHandlers: [String: () -> Void] = [:]
 
     private override init() {
-        let baseDirectory = DownloadService.makeBaseDirectory()
+        let baseDirectory = DownloadService.makeBaseDirectory() // TODO: use storage framework
         downloadsDirectory = baseDirectory.appendingPathComponent("Downloads", isDirectory: true)
         stateURL = baseDirectory.appendingPathComponent("downloads-state.json")
         pendingCompletionURL = baseDirectory.appendingPathComponent("pending-completions.json")
@@ -175,7 +175,7 @@ public final class DownloadService: NSObject {
 
     private func taskForEpisodeID(_ episodeID: Int) async -> URLSessionDownloadTask? {
         let tasks = await fetchAllDownloadTasks()
-        return tasks.first { $0.taskDescription == "/(episodeID)" } // episodeID(for: $0.taskDescription) == episodeID } RADEMAKER
+        return tasks.first { self.episodeID(for: $0.taskDescription) == episodeID }
     }
 
     // MARK: - Persistence helpers
@@ -480,4 +480,3 @@ private struct PendingCompletion: Codable, Sendable {
     let bytesExpected: Int64
     let fileSize: Int64
 }
-
