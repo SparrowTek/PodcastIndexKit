@@ -180,10 +180,14 @@ public final class DownloadService: NSObject {
 
     // MARK: - Persistence helpers
     private func createDirectoriesIfNeeded() {
+        createDirectoryIfNeeded(at: downloadsDirectory)
+    }
+
+    private func createDirectoryIfNeeded(at url: URL) {
         do {
-            try fileManager.createDirectory(at: downloadsDirectory, withIntermediateDirectories: true)
+            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         } catch {
-            logger.error("Failed to create downloads directory: \(error.localizedDescription)")
+            logger.error("Failed to create directory \(url.path, privacy: .public): \(error.localizedDescription)")
         }
     }
 
@@ -241,6 +245,7 @@ public final class DownloadService: NSObject {
             return
         }
 
+        ensureDownloadsDirectoryExists()
         let destination = record.destinationURL(root: downloadsDirectory)
         do {
             if fileManager.fileExists(atPath: destination.path) {
@@ -265,6 +270,7 @@ public final class DownloadService: NSObject {
         } catch {
             logger.error("Failed to finalize download for episode \(episodeID): \(error.localizedDescription)")
             broadcast(.failed(Failure(episode: record.episode, message: error.localizedDescription)))
+            cleanupTemporaryFile(at: location)
         }
     }
 
@@ -300,6 +306,22 @@ public final class DownloadService: NSObject {
         } catch {
             logger.error("Failed to remove temp download: \(error.localizedDescription)")
         }
+    }
+
+    private func ensureDownloadsDirectoryExists() {
+        guard !fileManager.fileExists(atPath: downloadsDirectory.path) else { return }
+        createDirectoryIfNeeded(at: downloadsDirectory)
+    }
+
+    private func handleStagingFailure(taskDescription: String?, error: Error, stagedURL: URL) async {
+        cleanupTemporaryFile(at: stagedURL)
+        guard let episodeID = episodeID(for: taskDescription), let record = downloads[episodeID] else {
+            logger.error("Failed to stage download: \(error.localizedDescription)")
+            return
+        }
+        downloads.removeValue(forKey: episodeID)
+        persistDownloads()
+        broadcast(.failed(Failure(episode: record.episode, message: error.localizedDescription)))
     }
 
     private func taskDescription(forEpisodeID episodeID: Int) -> String {
@@ -340,7 +362,17 @@ public final class DownloadService: NSObject {
 extension DownloadService: URLSessionDownloadDelegate {
     nonisolated public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         let description = downloadTask.taskDescription
-        Task { await self.handleDownloadFinished(taskDescription: description, location: location) }
+        let stagingURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let fileManager = FileManager()
+        do {
+            if fileManager.fileExists(atPath: stagingURL.path) {
+                try fileManager.removeItem(at: stagingURL)
+            }
+            try fileManager.moveItem(at: location, to: stagingURL)
+            Task { await self.handleDownloadFinished(taskDescription: description, location: stagingURL) }
+        } catch {
+            Task { await self.handleStagingFailure(taskDescription: description, error: error, stagedURL: stagingURL) }
+        }
     }
 
     nonisolated public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
