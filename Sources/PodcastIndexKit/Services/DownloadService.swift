@@ -4,6 +4,7 @@ import os.log
 @PodcastActor
 public final class DownloadService: NSObject {
     public static let shared = DownloadService()
+    public nonisolated static let preview = DownloadService()
     private typealias ContinuationID = UUID
     nonisolated private static let sessionIdentifier = "com.sparrowtek.podcastindexkit.background-downloads"
     private let logger = Logger(subsystem: "com.sparrowtek.podcastindexkit", category: "DownloadService")
