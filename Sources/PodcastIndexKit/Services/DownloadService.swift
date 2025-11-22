@@ -1,9 +1,16 @@
 @preconcurrency import Foundation
 import os.log
 
+/// Coordinates background downloads and persists podcast media to disk.
+///
+/// The service owns the background `URLSession`, handles staging/moving files, and
+/// broadcasts progress and completion events. Callers can supply a custom base directory
+/// to control where files are stored (for example, an app group container).
 @PodcastActor
 public final class DownloadService: NSObject {
+    /// Shared instance that writes into the default Application Support directory.
     public static let shared = DownloadService()
+    /// Preview instance intended for SwiftUI previews.
     public nonisolated static let preview = DownloadService()
     private typealias ContinuationID = UUID
     nonisolated private static let sessionIdentifier = "com.sparrowtek.podcastindexkit.background-downloads"
@@ -11,6 +18,7 @@ public final class DownloadService: NSObject {
     private let fileManager = FileManager()
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let baseDirectory: URL
     private let downloadsDirectory: URL
     private let stateURL: URL
     private let pendingCompletionURL: URL
@@ -27,11 +35,15 @@ public final class DownloadService: NSObject {
     private var continuations: [ContinuationID: AsyncStream<Event>.Continuation] = [:]
     private var backgroundCompletionHandlers: [String: () -> Void] = [:]
 
-    private override init() {
-        let baseDirectory = DownloadService.makeBaseDirectory() // TODO: use storage framework
-        downloadsDirectory = baseDirectory.appendingPathComponent("Downloads", isDirectory: true)
-        stateURL = baseDirectory.appendingPathComponent("downloads-state.json")
-        pendingCompletionURL = baseDirectory.appendingPathComponent("pending-completions.json")
+    /// Creates a download service.
+    /// - Parameter baseDirectory: Root directory for cached downloads and state. Defaults to
+    ///   the package-managed Application Support directory.
+    public init(baseDirectory: URL? = nil) {
+        let resolvedBaseDirectory = baseDirectory ?? DownloadService.makeBaseDirectory()
+        self.baseDirectory = resolvedBaseDirectory
+        self.downloadsDirectory = resolvedBaseDirectory.appendingPathComponent("Downloads", isDirectory: true)
+        self.stateURL = resolvedBaseDirectory.appendingPathComponent("downloads-state.json")
+        self.pendingCompletionURL = resolvedBaseDirectory.appendingPathComponent("pending-completions.json")
         super.init()
         createDirectoriesIfNeeded()
         loadPersistedDownloads()
@@ -46,6 +58,8 @@ public final class DownloadService: NSObject {
     }
 
     // MARK: - Public API
+    /// Enqueues a background download for an episode.
+    /// - Parameter episode: Episode to download. Must have an `id` and enclosure URL.
     public func enqueue(_ episode: Episode) async throws {
         guard let episodeID = episode.id else { throw DownloadError.missingIdentifier }
         guard let urlString = episode.enclosureUrl, let url = URL(string: urlString) else { throw DownloadError.missingURL }
@@ -67,6 +81,8 @@ public final class DownloadService: NSObject {
         broadcast(.started(episode))
     }
 
+    /// Cancels any active download for the given episode identifier.
+    /// - Parameter episodeID: Stable episode identifier.
     public func cancelDownload(forEpisodeID episodeID: Int) async {
         let episode = downloads[episodeID]?.episode
         let task = await taskForEpisodeID(episodeID)
@@ -76,6 +92,7 @@ public final class DownloadService: NSObject {
         if let episode { broadcast(.cancelled(episode)) }
     }
 
+    /// Cancels all active downloads and clears in-memory state.
     public func cancelAllDownloads() async {
         let snapshot = downloads
         downloads.removeAll()
@@ -87,10 +104,12 @@ public final class DownloadService: NSObject {
         }
     }
 
+    /// Returns snapshots of active downloads, including destination URLs.
     public func activeDownloads() async -> [ActiveDownloadSnapshot] {
         downloads.values.map { $0.snapshot(root: downloadsDirectory) }
     }
 
+    /// Returns pending completions that still need to be persisted by the host app.
     public func pendingCompletions() async -> [Completion] {
         pendingCompletions.map { Completion(episode: $0.episode,
                                             fileURL: downloadsDirectory.appendingPathComponent($0.fileName, isDirectory: false),
@@ -98,6 +117,8 @@ public final class DownloadService: NSObject {
                                             fileSize: $0.fileSize) }
     }
 
+    /// Marks a completion as handled by the host application.
+    /// - Parameter fileURL: URL that was previously delivered via a completion event.
     public func acknowledgeCompletion(at fileURL: URL) async {
         let fileName = fileURL.lastPathComponent
         let countBefore = pendingCompletions.count
@@ -107,6 +128,10 @@ public final class DownloadService: NSObject {
         }
     }
 
+    /// Handles background session events handed off from `UIApplicationDelegate`.
+    /// - Parameters:
+    ///   - identifier: Session identifier from the system callback.
+    ///   - completionHandler: Completion handler provided by the system.
     public func handleBackgroundEvents(for identifier: String, completionHandler: @escaping () -> Void) async {
         guard identifier == Self.sessionIdentifier else {
             completionHandler()
@@ -115,6 +140,7 @@ public final class DownloadService: NSObject {
         backgroundCompletionHandlers[identifier] = completionHandler
     }
 
+    /// Streams download events for observation in the host application.
     public func makeEventsStream() async -> AsyncStream<Event> {
         AsyncStream { continuation in
             let id = ContinuationID()
@@ -353,6 +379,7 @@ public final class DownloadService: NSObject {
         return "bin"
     }
 
+    /// Default base directory used by the shared instance.
     private static func makeBaseDirectory() -> URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first ?? FileManager.default.temporaryDirectory
         return appSupport.appendingPathComponent("com.sparrowtek.podcastindexkit", isDirectory: true)
@@ -404,6 +431,7 @@ extension DownloadService: URLSessionTaskDelegate {
 
 // MARK: - Supporting Types
 public extension DownloadService {
+    /// Errors thrown while preparing a download request.
     enum DownloadError: LocalizedError {
         case missingIdentifier
         case missingURL
@@ -418,6 +446,7 @@ public extension DownloadService {
         }
     }
 
+    /// Download progress payload.
     struct Progress: Sendable {
         public let episode: Episode
         public let bytesReceived: Int64
@@ -429,6 +458,7 @@ public extension DownloadService {
         }
     }
 
+    /// Completion payload delivered when a download finishes staging to disk.
     struct Completion: Sendable {
         public let episode: Episode
         public let fileURL: URL
@@ -436,11 +466,13 @@ public extension DownloadService {
         public let fileSize: Int64
     }
 
+    /// Failure payload delivered when a download fails or is cancelled.
     struct Failure: Sendable {
         public let episode: Episode
         public let message: String
     }
 
+    /// Snapshot of an in-flight download.
     struct ActiveDownloadSnapshot: Sendable {
         public let episode: Episode
         public let destinationURL: URL
@@ -453,6 +485,7 @@ public extension DownloadService {
         }
     }
 
+    /// Events emitted by the download service.
     enum Event: Sendable {
         case started(Episode)
         case progress(Progress)
