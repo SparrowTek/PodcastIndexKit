@@ -15,7 +15,7 @@ let package = Package(
 	// name, platforms, products, etc.
 	dependencies: [
 		// other dependencies
-		.package(url: "https://github.com/SparrowTek/PodcastIndexKit", from: "0.4.1"),
+		.package(url: "https://github.com/SparrowTek/PodcastIndexKit", from: "0.5.0"),
 	],
 	targets: [
 		// targets
@@ -35,7 +35,7 @@ PodcastIndexKit.setup(apiKey: "YOUR_API_KEY", apiSecret: "YOUR_API_SECRET", user
 
 ## Documentation
 
-Click here to see all [documentation](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit/0.4.1/documentation/podcastindexkit).
+Click here to see all [documentation](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit/documentation/podcastindexkit).
 
 ## Note
 
