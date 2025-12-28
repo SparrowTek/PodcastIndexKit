@@ -26,4 +26,5 @@ public struct Destination: Codable, Hashable, Sendable {
 
 public enum DestinationType: String, Codable, Hashable, Sendable {
 	case node
+	case lnaddress
 }
