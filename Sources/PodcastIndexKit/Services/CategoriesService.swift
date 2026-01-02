@@ -15,7 +15,7 @@ public struct CategoriesService: Sendable {
 	///
 	///- parameter pretty: If present, makes the output “pretty” to help with debugging.
 	/// Parameter shall not have a value
-	///- returns: a `CategoriesResponse` object containing an array of `Category` objects
+	///- returns: a `CategoriesResponse` object containing an array of `PodcastCategory` objects
 	public func list(pretty: Bool = false) async throws -> CategoriesResponse {
         try await router.execute(.list(pretty: pretty))
 	}

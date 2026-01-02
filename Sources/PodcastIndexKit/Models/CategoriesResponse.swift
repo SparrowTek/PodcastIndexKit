@@ -12,7 +12,7 @@ public struct CategoriesResponse: Codable, Hashable, Sendable {
 	}
 	
 	/// List of categories
-	public let feeds: [Category]?
+	public let feeds: [PodcastCategory]?
 	
 	/// Number of items returned in request
 	public let count: Int?
