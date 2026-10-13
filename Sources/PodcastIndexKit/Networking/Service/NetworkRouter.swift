@@ -1,8 +1,11 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 @PodcastActor
 protocol NetworkRouterDelegate: AnyObject {
-    func intercept(_ request: inout URLRequest) async
+    func intercept(_ request: inout URLRequest) async throws
     func shouldRetry(error: Error, attempts: Int) async throws -> Bool
 }
 
@@ -33,13 +36,15 @@ typealias HTTPHeaders = [String:String]
 internal class NetworkRouter<Endpoint: EndpointType>: NetworkRouterProtocol {
     
     weak var delegate: NetworkRouterDelegate?
-    let networking: Networking
+    let networking: any PodcastIndexNetworking
     let urlSessionTaskDelegate: URLSessionTaskDelegate?
     var decoder: JSONDecoder
     
-    init(networking: Networking? = nil, urlSessionDelegate: URLSessionDelegate? = nil, urlSessionTaskDelegate: URLSessionTaskDelegate? = nil, decoder: JSONDecoder? = nil) {
-        if let networking = networking {
+    init(networking: (any PodcastIndexNetworking)? = nil, urlSessionDelegate: URLSessionDelegate? = nil, urlSessionTaskDelegate: URLSessionTaskDelegate? = nil, decoder: JSONDecoder? = nil) {
+        if let networking {
             self.networking = networking
+        } else if let injected = PodcastEnvironment.current.networking {
+            self.networking = injected
         } else {
             self.networking = URLSession(configuration: URLSessionConfiguration.default, delegate: urlSessionDelegate, delegateQueue: nil)
         }
@@ -58,14 +63,22 @@ internal class NetworkRouter<Endpoint: EndpointType>: NetworkRouterProtocol {
     /// This method is async and it can throw errors
     /// - Returns: The generic type is returned
     func execute<T: Decodable>(_ route: Endpoint) async throws -> T {
-        guard var request = try? await buildRequest(from: route) else { throw NetworkError.encodingFailed }
-        await delegate?.intercept(&request)
+        let data = try await executeData(route)
+        return try decoder.decode(T.self, from: data)
+    }
+
+    /// Performs the request and returns the response body exactly as Podcast
+    /// Index sent it. Callers that cache responses use this so nothing is lost
+    /// in a decode/re-encode round trip.
+    func executeData(_ route: Endpoint) async throws -> Data {
+        var request = try await buildRequest(from: route)
+        try await delegate?.intercept(&request)
         
         let (data, response) = try await networking.data(for: request, delegate: urlSessionTaskDelegate)
         guard let httpResponse = response as? HTTPURLResponse else { throw NetworkError.noStatusCode }
         switch httpResponse.statusCode {
         case 200...299:
-            return try decoder.decode(T.self, from: data)
+            return data
         default:
             let statusCode = StatusCode(rawValue: httpResponse.statusCode)
             throw NetworkError.statusCode(statusCode, data: data)
@@ -73,10 +86,10 @@ internal class NetworkRouter<Endpoint: EndpointType>: NetworkRouterProtocol {
     }
     
     func buildRequest(from route: Endpoint) async throws -> URLRequest {
-        
-        var request = await URLRequest(url: route.baseURL.appendingPathComponent(route.path),
-                                       cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                       timeoutInterval: 10.0)
+        guard let baseURL = await route.baseURL else { throw NetworkError.missingURL }
+        var request = URLRequest(url: baseURL.appendingPathComponent(route.path),
+                                 cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                 timeoutInterval: 10.0)
         
         request.httpMethod = route.httpMethod.rawValue
         do {

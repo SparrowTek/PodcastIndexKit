@@ -33,6 +33,14 @@ Before making any API requests you must setup the `PodcastIndexKit` package usin
 PodcastIndexKit.setup(apiKey: "YOUR_API_KEY", apiSecret: "YOUR_API_SECRET", userAgent: "YOUR_APP_USER_AGENT")
 ```
 
+> **Keep the key out of client apps.** Podcast Index's terms of service (v2.0) forbid shipping the API key or secret in client-side code, including iOS, Android and web apps, where anyone can extract them from the binary. Call `setup` only on a server you control and have your app talk to that server. Every request must also carry a User-Agent that names your application.
+
+### Raw responses and custom transports
+
+Servers that cache Podcast Index responses can read the exact bytes the API returned with `PodcastIndexRawService`, then decode them later with `JSONDecoder.podcastIndexDecoder`. Pass a `PodcastIndexNetworking` implementation to `setup` to stub the network in tests or to route requests through another HTTP client.
+
+The package builds on Linux, where `swift-crypto` stands in for CryptoKit.
+
 ## Documentation
 
 Click here to see all [documentation](https://swiftpackageindex.com/SparrowTek/PodcastIndexKit/documentation/podcastindexkit).

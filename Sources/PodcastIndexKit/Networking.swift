@@ -1,8 +1,17 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+#if canImport(CryptoKit)
 import CryptoKit
+#else
+import Crypto
+#endif
 
 extension JSONDecoder {
-    static var podcastIndexDecoder: JSONDecoder {
+    /// The decoder every Podcast Index response is parsed with: snake_case keys
+    /// become camelCase and dates arrive as Unix timestamps in seconds.
+    public static var podcastIndexDecoder: JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
@@ -31,27 +40,27 @@ class PodcastIndexRouterDelegate: NetworkRouterDelegate {
         false
     }
     
-    func intercept(_ request: inout URLRequest) async {
-        let errorMessage = """
-PODCASTINDEXKIT Error: your apiKey, secretKey, and userAgent were not set.
-Please follow the intructions in the README for setting up the PodcastIndexKit framework
-Hint: You must call the static setup(apiKey: String, apiSecret: String, userAgent: String) method before using the framework
-"""
-        guard let apiKey = PodcastEnvironment.current.apiKey, let apiSecret = PodcastEnvironment.current.apiSecret, let userAgent = PodcastEnvironment.current.userAgent else { fatalError(errorMessage) }
+    func intercept(_ request: inout URLRequest) async throws {
+        guard let apiKey = PodcastEnvironment.current.apiKey,
+              let apiSecret = PodcastEnvironment.current.apiSecret,
+              let userAgent = PodcastEnvironment.current.userAgent else {
+            throw PodcastIndexError.notConfigured
+        }
         
-        // prep for crypto
         let apiHeaderTime = String(Int(Date().timeIntervalSince1970))
-        let data4Hash = apiKey + apiSecret + "\(apiHeaderTime)"
+        Self.sign(&request, apiKey: apiKey, apiSecret: apiSecret, userAgent: userAgent, apiHeaderTime: apiHeaderTime)
+    }
+
+    /// Adds the Podcast Index authentication headers: the request time, the key,
+    /// and `sha1(key + secret + time)` as the Authorization value.
+    nonisolated static func sign(_ request: inout URLRequest, apiKey: String, apiSecret: String, userAgent: String, apiHeaderTime: String) {
+        let data4Hash = apiKey + apiSecret + apiHeaderTime
+        let hashed = Insecure.SHA1.hash(data: Data(data4Hash.utf8))
+        let hashString = hashed.map { String(format: "%02x", $0) }.joined()
         
-        // ======== Hash them to get the Authorization token ========
-        let inputData = Data(data4Hash.utf8)
-        let hashed = Insecure.SHA1.hash(data: inputData)
-        let hashString = hashed.compactMap { String(format: "%02x", $0) }.joined()
-        
-        // set Headers
-        request.addValue(apiHeaderTime, forHTTPHeaderField: "X-Auth-Date")
-        request.addValue(apiKey, forHTTPHeaderField: "X-Auth-Key")
-        request.addValue(hashString, forHTTPHeaderField: "Authorization")
-        request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(apiHeaderTime, forHTTPHeaderField: "X-Auth-Date")
+        request.setValue(apiKey, forHTTPHeaderField: "X-Auth-Key")
+        request.setValue(hashString, forHTTPHeaderField: "Authorization")
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
     }
 }

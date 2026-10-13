@@ -1,0 +1,122 @@
+{
+  "status": "true",
+  "query": {
+    "id": "41504"
+  },
+  "feed": {
+    "id": 41504,
+    "podcastGuid": "856cd618-7f34-57ea-9b84-3600f1f65e7f",
+    "medium": "podcast",
+    "title": "No Agenda",
+    "url": "http://feed.nashownotes.com/rss.xml",
+    "originalUrl": "http://feed.nashownotes.com/rss.xml",
+    "link": "http://noagendashow.com",
+    "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
+    "author": "Adam Curry & John C. Dvorak",
+    "ownerName": "Adam Curry",
+    "image": "https://noagendaassets.com/enc/1698943491.532_na-1604-lit.png",
+    "artwork": "https://noagendaassets.com/enc/1698943491.532_na-1604-lit.png",
+    "lastUpdateTime": 1698949880,
+    "lastCrawlTime": 1698949876,
+    "lastParseTime": 1698949888,
+    "lastGoodHttpStatusTime": 1698949876,
+    "lastHttpStatus": 200,
+    "contentType": "text/xml; charset=UTF-8",
+    "itunesId": 269169796,
+    "itunesType": "episodic",
+    "generator": "Sovereign Feeds",
+    "language": "en",
+    "explicit": true,
+    "type": 0,
+    "dead": 0,
+    "chash": "bfdd6c15e26750f5dd2b14af6398dbbd",
+    "episodeCount": 29,
+    "crawlErrors": 0,
+    "parseErrors": 0,
+    "categories": {
+      "55": "News",
+      "59": "Politics",
+      "16": "Comedy"
+    },
+    "locked": 1,
+    "imageUrlHash": 2364893586,
+    "value": {
+      "model": {
+        "type": "lightning",
+        "method": "keysend",
+        "suggested": "0.00000005000"
+      },
+      "destinations": [
+        {
+          "name": "Value4Value",
+          "type": "node",
+          "address": "03ae9f91a0cb8ff43840e3c322c4c61f019d8c1c3cea15a25cfc425ac605e61a4a",
+          "split": 53
+        },
+        {
+          "name": "Clip Custodian (LNpay.co)",
+          "type": "node",
+          "address": "02a128c92baf0ede00ed0fc3720a92ba2c6392e0b58aa4decab1d787a666d94cb7",
+          "split": 20,
+          "customKey": "112111100",
+          "customValue": "wal_aMZ509T2lnpWvN"
+        },
+        {
+          "name": "Bakfiets",
+          "type": "node",
+          "address": "021f548a8ab5eb8e7cf91e4c9777c388463e213485ece9a1808e3c6850084ee630",
+          "split": 5
+        },
+        {
+          "name": "Dreb Scott (Chapter Architect)",
+          "type": "node",
+          "address": "02453e4e93322d60219808c00c2e6d1f1c673420e95b5511a33c40cfb4df5e9148",
+          "split": 5
+        },
+        {
+          "name": "Sir Bemrose",
+          "type": "node",
+          "address": "035df303dcc65edcf4965960be85c2f65b7910d253a7d6a52dd3768018a83f016a",
+          "split": 5
+        },
+        {
+          "name": "Geoff Smith - Various Original Songs",
+          "type": "node",
+          "address": "030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3",
+          "split": 5,
+          "customKey": "696969",
+          "customValue": "mXbAWPOMXmz866ZUJv29"
+        },
+        {
+          "name": "Sovereign Feeds",
+          "type": "node",
+          "address": "030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3",
+          "split": 5,
+          "customKey": "696969",
+          "customValue": "eChoVKtO1KujpAA5HCoB"
+        },
+        {
+          "name": "BoostBot",
+          "type": "node",
+          "address": "03d55f4d4c870577e98ac56605a54c5ed20c8897e41197a068fd61bdb580efaa67",
+          "split": 1,
+          "customKey": "696969",
+          "customValue": "gq0Z8b1wEftMkFL4vj7E"
+        },
+        {
+          "name": "Fountain Boosts",
+          "type": "node",
+          "address": "0332d57355d673e217238ce3e4be8491aa6b2a13f95494133ee243e57df1653ace",
+          "split": 1,
+          "customKey": "112111100",
+          "customValue": "wal_GJWRnH1vp88Uf"
+        }
+      ]
+    },
+    "funding": {
+      "url": "https://dvorak.org/na",
+      "message": "Support the Show!"
+    }
+  },
+  "description": "Found matching feeds."
+}

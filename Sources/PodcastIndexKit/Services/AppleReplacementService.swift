@@ -36,11 +36,10 @@ enum AppleReplacementAPI {
 }
 
 extension AppleReplacementAPI: EndpointType {
-    public var baseURL: URL {
+    public var baseURL: URL? {
         get async {
             let environmentURL = await PodcastEnvironment.current.appleReplacementBaseURL
-            guard let url = URL(string: environmentURL) else { fatalError("baseURL not configured.") }
-            return url
+            return URL(string: environmentURL)
         }
     }
     

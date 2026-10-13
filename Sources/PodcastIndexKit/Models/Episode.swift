@@ -70,6 +70,12 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
     
     /// The internal PodcastIndex.org Feed ID.
     public let feedId: Int?
+
+    /// The podcast:guid of the feed this episode belongs to.
+    public let podcastGuid: String?
+
+    /// Current feed URL of the podcast this episode belongs to.
+    public let feedUrl: String?
     
     /// The channel-level language specification of the feed. Languages accord with the RSS Language Spec.
     public let feedLanguage: String?
@@ -158,6 +164,8 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
         feedItunesId: Int? = nil,
         feedImage: String? = nil,
         feedId: Int? = nil,
+        podcastGuid: String? = nil,
+        feedUrl: String? = nil,
         feedLanguage: String? = nil,
         feedDead: Int? = nil,
         feedTitle: String? = nil,
@@ -198,6 +206,8 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
         self.feedItunesId = feedItunesId
         self.feedImage = feedImage
         self.feedId = feedId
+        self.podcastGuid = podcastGuid
+        self.feedUrl = feedUrl
         self.feedLanguage = feedLanguage
         self.feedDead = feedDead
         self.feedTitle = feedTitle
@@ -240,6 +250,8 @@ public struct Episode: Codable, Hashable, Identifiable, Sendable {
         case feedItunesId
         case feedImage
         case feedId
+        case podcastGuid
+        case feedUrl
         case feedLanguage
         case feedDead
         case feedTitle
