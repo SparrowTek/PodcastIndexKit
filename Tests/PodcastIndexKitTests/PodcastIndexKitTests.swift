@@ -68,6 +68,26 @@ struct RequestTests {
     }
 
     @PodcastActor
+    @Test("A single episode is asked for with its full text only on request")
+    func episodeFullText() async throws {
+        let stub = StubNetworking()
+        PodcastEnvironment.current.setup(apiKey: "key", apiSecret: "secret", userAgent: "tests/1.0", networking: stub)
+
+        _ = try await PodcastIndexRawService().episode(byId: 16795090)
+        _ = try await PodcastIndexRawService().episode(byId: 16795090, fullText: true)
+
+        let queries = try stub.requests.map { request in
+            let url = try #require(request.url)
+            return try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        }
+        #expect(queries.count == 2)
+        #expect(queries.allSatisfy { $0.path == "/api/1.0/episodes/byid" })
+        #expect(queries.allSatisfy { $0.queryItems?.contains(URLQueryItem(name: "id", value: "16795090")) == true })
+        #expect(queries.first?.queryItems?.contains { $0.name == "fulltext" } == false)
+        #expect(queries.last?.queryItems?.contains { $0.name == "fulltext" } == true)
+    }
+
+    @PodcastActor
     @Test("Typed services decode through the same transport")
     func typedService() async throws {
         let stub = StubNetworking()

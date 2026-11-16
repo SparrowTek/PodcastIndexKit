@@ -62,8 +62,11 @@ public struct PodcastIndexRawService: Sendable {
         try await episodesRouter.executeData(.byFeedURL(url: url, since: nil, max: max, fulltext: false, pretty: false))
     }
 
-    public func episode(byId id: Int) async throws -> Data {
-        try await episodesRouter.executeData(.byID(id: String(id), fulltext: false, pretty: false))
+    /// - Parameter fullText: Whether text fields such as the description come back
+    ///   whole. Podcast Index cuts them to 100 words otherwise, wherever in the
+    ///   text, or in its markup, the hundredth word happens to end.
+    public func episode(byId id: Int, fullText: Bool = false) async throws -> Data {
+        try await episodesRouter.executeData(.byID(id: String(id), fulltext: fullText, pretty: false))
     }
 
     public func recentEpisodes(max: Int? = nil) async throws -> Data {
