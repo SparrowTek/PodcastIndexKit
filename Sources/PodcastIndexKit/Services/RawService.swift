@@ -50,6 +50,17 @@ public struct PodcastIndexRawService: Sendable {
         try await podcastsRouter.executeData(.byItunesID(id: id, pretty: false))
     }
 
+    /// The podcast whose feed is at `url`.
+    ///
+    /// Podcast Index matches the address as written, apart from taking `http`
+    /// for `https` and overlooking a slash at the end: the host's case, a
+    /// missing scheme and any difference in the query all miss. An address it
+    /// does not hold is answered with a 400, which arrives here as
+    /// ``NetworkError/statusCode(_:data:)``.
+    public func podcast(byFeedUrl url: String) async throws -> Data {
+        try await podcastsRouter.executeData(.byFeedURL(url: url, pretty: false))
+    }
+
     public func trendingPodcasts(max: Int? = nil, lang: String? = nil, cat: String? = nil) async throws -> Data {
         try await podcastsRouter.executeData(.trending(max: max, since: nil, lang: lang, cat: cat, notcat: nil, pretty: false))
     }

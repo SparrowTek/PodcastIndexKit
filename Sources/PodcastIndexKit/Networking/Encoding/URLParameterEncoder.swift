@@ -61,12 +61,17 @@ struct URLParameterEncoder: ParameterEncoder {
         guard let url = urlRequest.url else { throw NetworkError.missingURL }
         
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
-            var items = urlComponents.queryItems ?? []
-            items.append(contentsOf: parameters)
-            urlComponents.queryItems = items
+            // Written out rather than handed to `queryItems`, which leaves a
+            // "+" as it is. Podcast Index reads a bare "+" as a space, so a
+            // feed address or a search term with one in it would arrive as
+            // something else.
+            let query = parameters
+                .map { item in item.value.map { "\(escape(item.name))=\(escape($0))" } ?? escape(item.name) }
+                .joined(separator: "&")
+            urlComponents.percentEncodedQuery = (urlComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query
             urlRequest.url = urlComponents.url
         }
-        
+
         if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
             urlRequest.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
         }

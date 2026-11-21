@@ -13,7 +13,7 @@ public struct EpisodeResponse: Codable, Hashable, Identifiable, Sendable {
 	
 	public let podcastGuid: String?
 	
-	/// Episode data
+	/// Episode data. `nil` when Podcast Index found none.
 	public let episode: Episode?
 	
 	/// Description of the response
@@ -37,5 +37,16 @@ public struct EpisodeResponse: Codable, Hashable, Identifiable, Sendable {
 		case podcastGuid
 		case episode
 		case episodeResponseDescription = "description"
+	}
+	
+	public init(from decoder: any Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		responseStatus = try container.decodeIfPresent(String.self, forKey: .responseStatus)
+		id = try container.decodeIfPresent(String.self, forKey: .id)
+		url = try container.decodeIfPresent(String.self, forKey: .url)
+		guid = try container.decodeIfPresent(String.self, forKey: .guid)
+		podcastGuid = try container.decodeIfPresent(String.self, forKey: .podcastGuid)
+		episode = try container.decodeIfFound(Episode.self, forKey: .episode)
+		episodeResponseDescription = try container.decodeIfPresent(String.self, forKey: .episodeResponseDescription)
 	}
 }
