@@ -69,6 +69,36 @@ public struct PodcastIndexRawService: Sendable {
         try await episodesRouter.executeData(.byFeedID(id: String(id), since: nil, max: max, enclosure: nil, fulltext: false, pretty: false))
     }
 
+    /// The most feeds one call to ``episodes(byFeedIds:since:max:)`` may name.
+    public nonisolated static let maximumFeedsPerRequest = 200
+
+    /// The most episodes one call to ``episodes(byFeedIds:since:max:)`` answers with.
+    public nonisolated static let maximumEpisodesPerRequest = 1000
+
+    /// What several feeds have published since a moment in time, in one
+    /// answer, newest first.
+    ///
+    /// `since` is compared with an episode's publication date, not with when
+    /// Podcast Index found it. `max` counts episodes across all the feeds,
+    /// and an answer that comes back full is not the newest `max` of them:
+    /// which episodes were left out cannot be told from it (measured
+    /// 2026-11-24). Treat a full answer as "too many" and ask about fewer
+    /// feeds at a time.
+    ///
+    /// A feed Podcast Index does not hold, or one with nothing new, is simply
+    /// absent from the answer.
+    ///
+    /// - Parameters:
+    ///   - ids: The feeds, at most ``maximumFeedsPerRequest``.
+    ///   - since: The earliest publication date to include.
+    ///   - max: How many episodes to return at most, up to
+    ///     ``maximumEpisodesPerRequest``. Podcast Index answers with far
+    ///     fewer when this is left out.
+    public func episodes(byFeedIds ids: [Int], since: Date, max: Int? = nil) async throws -> Data {
+        let list = ids.map(String.init).joined(separator: ",")
+        return try await episodesRouter.executeData(.byFeedID(id: list, since: since, max: max, enclosure: nil, fulltext: false, pretty: false))
+    }
+
     public func episodes(byFeedUrl url: String, max: Int? = nil) async throws -> Data {
         try await episodesRouter.executeData(.byFeedURL(url: url, since: nil, max: max, fulltext: false, pretty: false))
     }

@@ -123,6 +123,39 @@ struct RequestTests {
     }
 
     @PodcastActor
+    @Test("Several feeds are asked about in one request, with the moment as a Unix timestamp")
+    func episodesOfSeveralFeeds() async throws {
+        let stub = StubNetworking()
+        PodcastEnvironment.current.setup(apiKey: "key", apiSecret: "secret", userAgent: "tests/1.0", networking: stub)
+        let since = Date(timeIntervalSince1970: 1_795_000_000.75)
+
+        _ = try await PodcastIndexRawService().episodes(byFeedIds: [75075, 920666, 41504], since: since, max: 1000)
+
+        let url = try #require(stub.requests.first?.url)
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.path == "/api/1.0/episodes/byfeedid")
+        #expect(components.queryItems == [
+            URLQueryItem(name: "id", value: "75075,920666,41504"),
+            URLQueryItem(name: "max", value: "1000"),
+            URLQueryItem(name: "since", value: "1795000000"),
+        ])
+    }
+
+    @PodcastActor
+    @Test("A typed call sends a date as a Unix timestamp too")
+    func dateParameter() async throws {
+        let stub = StubNetworking()
+        PodcastEnvironment.current.setup(apiKey: "key", apiSecret: "secret", userAgent: "tests/1.0", networking: stub)
+        stub.responseData = try fixture("episodeArrayResponse")
+
+        _ = try await EpisodesService().episodes(byFeedID: "75075", since: Date(timeIntervalSince1970: 1_700_000_000))
+
+        let url = try #require(stub.requests.first?.url)
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.queryItems?.contains(URLQueryItem(name: "since", value: "1700000000")) == true)
+    }
+
+    @PodcastActor
     @Test("Typed services decode through the same transport")
     func typedService() async throws {
         let stub = StubNetworking()
